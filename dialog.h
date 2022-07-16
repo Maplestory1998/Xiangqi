@@ -14,11 +14,15 @@ class Dialog : public QDialog
 public:
     explicit Dialog(QWidget *parent = nullptr);
     ~Dialog();
+    bool isPVE;
 
 private slots:
     void on_pvp_clicked();
 
     void on_exit_clicked();
+
+
+    void on_pve_clicked();
 
 private:
     Ui::Dialog *ui;

@@ -3,11 +3,18 @@
 
 #include <QWidget>
 #include <QMouseEvent>
+#include <QDialog>
 #include "board.h"
 #include "gamecontroller.h"
+#include "msgdialog.h"
 
 #define WINDOW_WIDTH_DEFAULT    1920
 #define WINDOW_HEIGHT_DEFAULT   1080
+
+enum GAME_MODE{
+    PVP,
+    PVE,
+};
 
 
 QT_BEGIN_NAMESPACE
@@ -19,7 +26,7 @@ class Widget : public QWidget
     Q_OBJECT
 
 public:
-    Widget(QWidget *parent = nullptr);
+    Widget(QWidget *parent = nullptr, GAME_MODE mode = PVP);
     ~Widget();
 
 
@@ -35,8 +42,14 @@ private:
     void drawBoard2(QPainter &painter, int r, int c, int tag);
     void drawBoard3(QPainter &pp, QPen &oldPen, int r, int c);
 
+    void showGameResult(GAME_STATE gameState);
+
+    //new Widget to show the result
+    QDialog *n;
+
     Ui::Widget *ui;
     GameController *m_gameController;
+    GAME_MODE game_mode;
 
     QPixmap m_pieceImages[14];
 

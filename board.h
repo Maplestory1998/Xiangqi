@@ -47,6 +47,9 @@ public:
 
     void movePiece(QPair<int, int> oldP, QPair<int, int> newP);
 
+    Piece& getPiece(int idx){
+        return m_pieces[idx];
+    }
 
 private:
     int m_chessBoard[10][9]; //store Piece idx of every board position

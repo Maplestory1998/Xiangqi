@@ -4,8 +4,11 @@
 #include "board.h"
 
 enum GAME_STATE{
-    WAIT_CHOOSE_PIECE,
-    WAIT_MOVE
+    WAIT_PLAYER_CHOOSE_PIECE,
+    WAIT_PLAYER_MOVE,
+    WAIT_AI_MOVE,
+    BLACK_WIN,
+    RED_WIN,
 };
 
 

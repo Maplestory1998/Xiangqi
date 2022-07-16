@@ -4,14 +4,18 @@
 #include <QDebug>
 #include <QDesktopWidget>
 
-Widget::Widget(QWidget *parent)
-    : QWidget(parent)
-    , ui(new Ui::Widget), m_gameController(new GameController),
+Widget::Widget(QWidget *parent, GAME_MODE mode)
+    : QWidget(parent),
+    ui(new Ui::Widget), m_gameController(new GameController), game_mode(mode),
     m_chessSize(0),   m_gap(0), m_step(0)
 {
     ui->setupUi(this);
     resize(WINDOW_WIDTH_DEFAULT , WINDOW_HEIGHT_DEFAULT);
     setMinimumSize(WINDOW_WIDTH_DEFAULT , WINDOW_HEIGHT_DEFAULT);
+    if(game_mode == PVE)
+        qDebug()<<"PVE";
+    if(game_mode == PVP)
+        qDebug()<<"PVP";
 
     loadImages();
 }
@@ -22,6 +26,7 @@ void Widget::loadImages()
     {
         m_pieceImages[i].load(g_imagesSources[i]);
     }
+
 }
 
 Widget::~Widget()
@@ -97,7 +102,7 @@ void Widget::paintEvent(QPaintEvent *event)
     drawBoard2(pp, 7, 7, 3);
 
 
-      //draw pieces
+    //draw pieces
     m_chessSize = m_step;
 
     for(int r = 0; r < 10; ++r)
@@ -115,7 +120,8 @@ void Widget::paintEvent(QPaintEvent *event)
     }
 
 
-    if(m_gameController->getGameState() == WAIT_MOVE)
+    //等待玩家移动
+    if(m_gameController->getGameState() == WAIT_PLAYER_MOVE)
     {
         drawBoard3(pp, pen, m_gameController->getChosePos().first, m_gameController->getChosePos().second);
         qDebug()<<m_gameController->getChosePos().first<<m_gameController->getChosePos().second;
@@ -143,7 +149,10 @@ void Widget::mousePressEvent(QMouseEvent *event)
     qDebug()<<type;
 
     GAME_STATE currentState = m_gameController->controller(rIdx, cIdx);
+
     update();
+    if(currentState == RED_WIN || currentState == BLACK_WIN)
+        showGameResult(currentState);
 }
 
 // draw "#" on board.  tag: 1- left, 2- right, 3-full
@@ -210,7 +219,13 @@ void Widget::drawBoard3(QPainter &pp, QPen &oldPen, int r, int c)
 }
 
 
-
+void Widget::showGameResult(GAME_STATE gameState){
+    if( RED_WIN == gameState)
+        n = new MsgDialog(this, "Red Player Win!");
+    else
+        n = new MsgDialog(this, "Black Player Win!");
+    n->show();
+}
 
 
 

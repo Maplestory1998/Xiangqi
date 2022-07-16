@@ -20,6 +20,7 @@ SOURCES += \
     dialog.cpp \
     gamecontroller.cpp \
     main.cpp \
+    msgdialog.cpp \
     piece.cpp \
     widget.cpp
 
@@ -27,11 +28,13 @@ HEADERS += \
     board.h \
     dialog.h \
     gamecontroller.h \
+    msgdialog.h \
     piece.h \
     widget.h
 
 FORMS += \
     dialog.ui \
+    msgdialog.ui \
     widget.ui
 
 # Default rules for deployment.
