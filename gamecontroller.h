@@ -2,6 +2,12 @@
 #define GAMECONTROLLER_H
 #include <QPoint>
 #include "board.h"
+#include "ai.h"
+enum GAME_MODE{
+    PVP,
+    PVE,
+};
+
 
 enum GAME_STATE{
     WAIT_PLAYER_CHOOSE_PIECE,
@@ -21,7 +27,7 @@ public:
     void setGameState(GAME_STATE state){m_gameState = state;}
     GAME_STATE getGameState(){return m_gameState;}
 
-    GAME_STATE controller(int _row, int _col);
+    GAME_STATE controller(int _row, int _col, GAME_MODE gameMode);
 
     QPair<int, int> getChosePos() { return m_chosePos;}
     QPair<int, int> getCurPos() { return m_curPos;}
@@ -29,15 +35,19 @@ public:
     void setChosePos(int r, int c) {m_chosePos = {r, c};}
     void setCurPos(int r, int c) { m_curPos = {r, c};}
 
+    //只在PVE模式下被调用
+    void initialAi();
+    Ai* ai;
+
 private:
 
     Board *m_board;
-
+    //PVP or PVE
     GAME_STATE m_gameState;
 
     QPair<int, int> m_chosePos;
     QPair<int, int> m_curPos;
-
+    //轮到谁走棋了
     PIECE_COLOR m_currentPlayer;
 
 };

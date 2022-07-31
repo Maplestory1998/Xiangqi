@@ -11,11 +11,6 @@
 #define WINDOW_WIDTH_DEFAULT    1920
 #define WINDOW_HEIGHT_DEFAULT   1080
 
-enum GAME_MODE{
-    PVP,
-    PVE,
-};
-
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class Widget; }

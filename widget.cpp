@@ -12,8 +12,10 @@ Widget::Widget(QWidget *parent, GAME_MODE mode)
     ui->setupUi(this);
     resize(WINDOW_WIDTH_DEFAULT , WINDOW_HEIGHT_DEFAULT);
     setMinimumSize(WINDOW_WIDTH_DEFAULT , WINDOW_HEIGHT_DEFAULT);
-    if(game_mode == PVE)
+    if(game_mode == PVE) {
+      // m_gameController->ai = new Ai();
         qDebug()<<"PVE";
+    }
     if(game_mode == PVP)
         qDebug()<<"PVP";
 
@@ -148,11 +150,15 @@ void Widget::mousePressEvent(QMouseEvent *event)
     qDebug()<<rIdx<<cIdx;
     qDebug()<<type;
 
-    GAME_STATE currentState = m_gameController->controller(rIdx, cIdx);
+    GAME_STATE currentState = m_gameController->controller(rIdx, cIdx, game_mode);
 
     update();
     if(currentState == RED_WIN || currentState == BLACK_WIN)
         showGameResult(currentState);
+
+    if(game_mode == PVE && currentState == WAIT_AI_MOVE) {
+        //TODO AI logic;
+    }
 }
 
 // draw "#" on board.  tag: 1- left, 2- right, 3-full

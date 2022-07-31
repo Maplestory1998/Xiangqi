@@ -3,7 +3,7 @@
 
 GameController::GameController() : m_board (&g_board),  m_gameState(WAIT_PLAYER_CHOOSE_PIECE), m_currentPlayer(RED)
 {
-
+    ai = nullptr;
 }
 
 GameController::~GameController()
@@ -11,8 +11,11 @@ GameController::~GameController()
 
 }
 
+void GameController::initialAi() {
+    ai = new Ai(m_board);
+}
 
-GAME_STATE GameController::controller(int _row, int _col)
+GAME_STATE GameController::controller(int _row, int _col, GAME_MODE gameMode)
 {
     if(_row < 0 || _row > 9 || _col < 0 || _col > 8)
         return m_gameState;
@@ -36,7 +39,7 @@ GAME_STATE GameController::controller(int _row, int _col)
             getBoard()->movePiece(getChosePos(), getCurPos());
         }
 
-        m_gameState = WAIT_PLAYER_CHOOSE_PIECE;
+        m_gameState = gameMode == PVP ?WAIT_PLAYER_CHOOSE_PIECE: WAIT_AI_MOVE;
 
     }
     //判断游戏是否结束

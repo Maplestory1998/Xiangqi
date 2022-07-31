@@ -16,18 +16,22 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    ai.cpp \
     board.cpp \
     dialog.cpp \
     gamecontroller.cpp \
     main.cpp \
+    mctstreenode.cpp \
     msgdialog.cpp \
     piece.cpp \
     widget.cpp
 
 HEADERS += \
+    ai.h \
     board.h \
     dialog.h \
     gamecontroller.h \
+    mctstreenode.h \
     msgdialog.h \
     piece.h \
     widget.h
