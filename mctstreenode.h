@@ -2,8 +2,9 @@
 #define MCTSTREENODE_H
 
 #include <vector>
-#include <QPair>
+#include <utility>
 #include "piece.h"
+#include "board.h"
 using namespace std;
 
 const double explorationValue = 1.0;
@@ -13,8 +14,12 @@ const double eps = 1e-6;
 class MCTSTreeNode
 {
 public:
-    MCTSTreeNode();
+    MCTSTreeNode(Board *_board, PIECE_COLOR color, ChessMove *move, MCTSTreeNode *parent = nullptr);
 
+    //是红色还是黑子走棋
+    PIECE_COLOR currentColor;
+    //赢家
+    PIECE_COLOR winner;
     //是否是终点
     bool isTerminal;
     //是否被完全扩展
@@ -23,27 +28,19 @@ public:
     MCTSTreeNode *parent;
     //被访问的次数
     int numVisited;
-    //获胜的次数
-    int numWin;
+    //Ai获胜的次数
+    int numAiWin;
+    //当前棋局
+    Board *board;
+    //子节点
     vector<MCTSTreeNode*> children;
 
-    //当前棋局
-    vector<vector<int>> m_chessBoard;
+    int VisitedChildrenCnt;
 
-    //选择
-    MCTSTreeNode* select();
-
-    void init();
-
-    //扩展
-    void expand();
-
-    //反向传播
-    void backpropogate(int reward);
-
-private:
-    MCTSTreeNode* randomChoice(vector<MCTSTreeNode*> nodes);
+    void isEnd();
 };
+
+
 
 vector<ChessMove> getAllMove(vector<vector<int>>& chessBoard, vector<Piece> pieces);
 

@@ -11,9 +11,6 @@ GameController::~GameController()
 
 }
 
-void GameController::initialAi() {
-    ai = new Ai(m_board);
-}
 
 GAME_STATE GameController::controller(int _row, int _col, GAME_MODE gameMode)
 {
@@ -27,6 +24,7 @@ GAME_STATE GameController::controller(int _row, int _col, GAME_MODE gameMode)
 
         m_gameState = WAIT_PLAYER_MOVE;
         setChosePos(_row, _col);
+        return m_gameState;
     }
     else if(m_gameState ==  WAIT_PLAYER_MOVE)
     {
@@ -37,9 +35,9 @@ GAME_STATE GameController::controller(int _row, int _col, GAME_MODE gameMode)
         {
             m_currentPlayer = m_currentPlayer == RED? BLACK : RED;
             getBoard()->movePiece(getChosePos(), getCurPos());
+            m_gameState = gameMode == PVP ?WAIT_PLAYER_CHOOSE_PIECE: WAIT_AI_MOVE;
         }
 
-        m_gameState = gameMode == PVP ?WAIT_PLAYER_CHOOSE_PIECE: WAIT_AI_MOVE;
 
     }
     //判断游戏是否结束
@@ -54,4 +52,10 @@ GAME_STATE GameController::controller(int _row, int _col, GAME_MODE gameMode)
     }
 
     return m_gameState;
+}
+
+
+void GameController::setBoard(Board *_board){
+    delete m_board;
+    m_board = new Board(*_board);;
 }

@@ -1,7 +1,7 @@
 #ifndef BOARD_H
 #define BOARD_H
 #include <QPoint>
-#include <QPair>
+#include <utility>
 #include <QPixmap>
 #include "piece.h"
 
@@ -11,6 +11,10 @@ class Board
 {
 public:
     Board();
+
+    //拷贝构造函数
+    Board(Board &b);
+
     //获取位置为row，col的棋子id
     inline int getPieceID(int row, int col)
     {
@@ -46,16 +50,20 @@ public:
     }
 
     //棋子能否从oldP移动到newP
-    bool canMove(QPair<int,int> oldP, QPair<int, int> newP);
+    bool canMove(pair<int,int> oldP, pair<int, int> newP);
     void init();
 
     //移动棋子
-    void movePiece(QPair<int, int> oldP, QPair<int, int> newP);
+    void movePiece(pair<int, int> oldP, pair<int, int> newP);
+
+    void movePiece(const ChessMove &chessMove);
 
     //获取id为idx的棋子
     Piece& getPiece(int idx){
         return m_pieces[idx];
     }
+
+
 
 private:
     //存储每个位置的棋子id

@@ -57,7 +57,13 @@ InitialPos g_initialPos[32] = {
     {6, 8,  RED_SOLDIER,    canSoldierMove,     getSoldierMove},
 };
 
-Piece::Piece() : canPieceMove(nullptr),  m_exist(true) , m_board(&g_board)
+Piece::Piece() : canPieceMove(nullptr), allMoveMethod(nullptr),m_exist(true) , m_board(&g_board)
+{
+
+}
+
+Piece::Piece(const Piece &piece) :m_type(piece.m_type), m_color(piece.m_color), m_exist(piece.m_exist),
+                                    m_board(nullptr)
 {
 
 }
@@ -68,13 +74,14 @@ void Piece::Init(int id)
     //m_col = g_initialPos[id].col;
     m_type = g_initialPos[id].type;
     canPieceMove = g_initialPos[id].func;
+    allMoveMethod = g_initialPos[id].func2;
 
     m_color = id <= 15? BLACK: RED;
 
 }
 
 
-bool canGeneralMove(QPair<int, int> oldP, QPair<int, int> newP, PIECE_COLOR color, Board *board)
+bool canGeneralMove(pair<int, int> oldP, pair<int, int> newP, PIECE_COLOR color, Board *board)
 {
     Q_UNUSED(board);
     int distance = abs(newP.first - oldP.first) + abs(newP.second - oldP.second);
@@ -90,7 +97,7 @@ bool canGeneralMove(QPair<int, int> oldP, QPair<int, int> newP, PIECE_COLOR colo
     return true;
 }
 
-bool canAdvisorMove(QPair<int, int> oldP, QPair<int, int> newP, PIECE_COLOR color, Board *board)
+bool canAdvisorMove(pair<int, int> oldP, pair<int, int> newP, PIECE_COLOR color, Board *board)
 {
     Q_UNUSED(board);
 
@@ -106,7 +113,7 @@ bool canAdvisorMove(QPair<int, int> oldP, QPair<int, int> newP, PIECE_COLOR colo
     return true;
 }
 
-bool canElephantMove(QPair<int, int> oldP, QPair<int, int> newP, PIECE_COLOR color, Board *board)
+bool canElephantMove(pair<int, int> oldP, pair<int, int> newP, PIECE_COLOR color, Board *board)
 {
     if(abs(newP.first - oldP.first) != 2 || abs(newP.second - oldP.second) != 2)
         return false;
@@ -126,7 +133,7 @@ bool canElephantMove(QPair<int, int> oldP, QPair<int, int> newP, PIECE_COLOR col
     return true;
 }
 
-bool canHorseMove(QPair<int, int> oldP, QPair<int, int> newP, PIECE_COLOR color, Board *board)
+bool canHorseMove(pair<int, int> oldP, pair<int, int> newP, PIECE_COLOR color, Board *board)
 {
     Q_UNUSED(color);
     int gapY = abs(newP.first - oldP.first);
@@ -154,7 +161,7 @@ bool canHorseMove(QPair<int, int> oldP, QPair<int, int> newP, PIECE_COLOR color,
     return true;
 }
 
-bool canChariotMove(QPair<int, int> oldP, QPair<int, int> newP, PIECE_COLOR color, Board *board)
+bool canChariotMove(pair<int, int> oldP, pair<int, int> newP, PIECE_COLOR color, Board *board)
 {
     Q_UNUSED(color);
 
@@ -179,7 +186,7 @@ bool canChariotMove(QPair<int, int> oldP, QPair<int, int> newP, PIECE_COLOR colo
     return true;
 }
 
-bool canCannoMove(QPair<int, int> oldP, QPair<int, int> newP, PIECE_COLOR color, Board *board)
+bool canCannoMove(pair<int, int> oldP, pair<int, int> newP, PIECE_COLOR color, Board *board)
 {
     Q_UNUSED(color);
     if(oldP.first != newP.first && oldP.second != newP.second)
@@ -216,7 +223,7 @@ bool canCannoMove(QPair<int, int> oldP, QPair<int, int> newP, PIECE_COLOR color,
 }
 
 
-bool canSoldierMove(QPair<int, int> oldP, QPair<int, int> newP, PIECE_COLOR color, Board *board)
+bool canSoldierMove(pair<int, int> oldP, pair<int, int> newP, PIECE_COLOR color, Board *board)
 {
     Q_UNUSED(board);
     int distance = abs(oldP.first - newP.first) + abs(oldP.second - newP.second);
@@ -241,12 +248,12 @@ bool canSoldierMove(QPair<int, int> oldP, QPair<int, int> newP, PIECE_COLOR colo
 
 
 //no problem
-void getGeneralMove(QPair<int,int> oldP,  PIECE_COLOR color, Board* board, vector<ChessMove>& chessMove)
+void getGeneralMove(pair<int,int> oldP,  PIECE_COLOR color, Board* board, vector<ChessMove>& chessMove)
 {
-    auto left = QPair<int, int>(oldP.first, oldP.second - 1);
-    auto right = QPair<int, int>(oldP.first, oldP.second + 1);
-    auto top = QPair<int, int>(oldP.first - 1, oldP.second);
-    auto down = QPair<int, int>(oldP.first + 1, oldP.second);
+    auto left = pair<int, int>(oldP.first, oldP.second - 1);
+    auto right = pair<int, int>(oldP.first, oldP.second + 1);
+    auto top = pair<int, int>(oldP.first - 1, oldP.second);
+    auto down = pair<int, int>(oldP.first + 1, oldP.second);
     //左
     if(left.second >= 3 && isEmptyOrEnemy(board, color, left)) {
         chessMove.push_back(ChessMove(oldP, left));
@@ -270,12 +277,12 @@ void getGeneralMove(QPair<int,int> oldP,  PIECE_COLOR color, Board* board, vecto
 }
 
 //no problem
-void getAdvisorMove(QPair<int,int> oldP,  PIECE_COLOR color, Board* board, vector<ChessMove>& chessMove)
+void getAdvisorMove(pair<int,int> oldP,  PIECE_COLOR color, Board* board, vector<ChessMove>& chessMove)
 {
-    auto leftTop = QPair<int, int>(oldP.first - 1, oldP.second - 1);
-    auto rightTop = QPair<int, int>(oldP.first - 1, oldP.second + 1);
-    auto leftDown = QPair<int, int>(oldP.first + 1, oldP.second - 1);
-    auto rightDown = QPair<int, int>(oldP.first + 1, oldP.second + 1);
+    auto leftTop = pair<int, int>(oldP.first - 1, oldP.second - 1);
+    auto rightTop = pair<int, int>(oldP.first - 1, oldP.second + 1);
+    auto leftDown = pair<int, int>(oldP.first + 1, oldP.second - 1);
+    auto rightDown = pair<int, int>(oldP.first + 1, oldP.second + 1);
     //左上
     if( ((color == RED && leftTop.first >= 7) || (color == BLACK && leftTop.first >= 0) )
             && leftTop.second >= 3 && isEmptyOrEnemy(board, color, leftTop) ){
@@ -300,12 +307,12 @@ void getAdvisorMove(QPair<int,int> oldP,  PIECE_COLOR color, Board* board, vecto
 }
 
 //no problem
-void getElephantMove(QPair<int,int> oldP,  PIECE_COLOR color, Board* board, vector<ChessMove>& chessMove)
+void getElephantMove(pair<int,int> oldP,  PIECE_COLOR color, Board* board, vector<ChessMove>& chessMove)
 {
-    auto leftTop = QPair<int, int>(oldP.first - 2, oldP.second - 2);
-    auto rightTop = QPair<int, int>(oldP.first - 2, oldP.second + 2);
-    auto leftDown = QPair<int, int>(oldP.first + 2, oldP.second - 2);
-    auto rightDown = QPair<int, int>(oldP.first + 2, oldP.second + 2);
+    auto leftTop = pair<int, int>(oldP.first - 2, oldP.second - 2);
+    auto rightTop = pair<int, int>(oldP.first - 2, oldP.second + 2);
+    auto leftDown = pair<int, int>(oldP.first + 2, oldP.second - 2);
+    auto rightDown = pair<int, int>(oldP.first + 2, oldP.second + 2);
     //左上
     if( ((color == RED && leftTop.first >= 5) || (color == BLACK && leftTop.first >= 0))
             && leftTop.second >= 0 && isEmptyOrEnemy(board, color, leftTop) ) {
@@ -329,17 +336,17 @@ void getElephantMove(QPair<int,int> oldP,  PIECE_COLOR color, Board* board, vect
 }
 
 
-void getHorseMove(QPair<int,int> oldP,  PIECE_COLOR color, Board* board, vector<ChessMove>& chessMove)
+void getHorseMove(pair<int,int> oldP,  PIECE_COLOR color, Board* board, vector<ChessMove>& chessMove)
 {
-    auto left1_top2 = QPair<int, int>(oldP.first - 2, oldP.second - 1);
-    auto left2_top1 = QPair<int, int>(oldP.first - 1, oldP.second - 2);
-    auto right1_top2 = QPair<int, int>(oldP.first - 2, oldP.second + 1);
-    auto right2_top1 = QPair<int, int>(oldP.first - 1, oldP.second + 2);
+    auto left1_top2 = pair<int, int>(oldP.first - 2, oldP.second - 1);
+    auto left2_top1 = pair<int, int>(oldP.first - 1, oldP.second - 2);
+    auto right1_top2 = pair<int, int>(oldP.first - 2, oldP.second + 1);
+    auto right2_top1 = pair<int, int>(oldP.first - 1, oldP.second + 2);
 
-    auto left1_down2 = QPair<int, int>(oldP.first + 2, oldP.second - 1);
-    auto left2_down1 = QPair<int, int>(oldP.first + 1, oldP.second - 2);
-    auto right1_down2 = QPair<int, int>(oldP.first + 2, oldP.second + 1);
-    auto right2_down1 = QPair<int, int>(oldP.first + 1, oldP.second + 2);
+    auto left1_down2 = pair<int, int>(oldP.first + 2, oldP.second - 1);
+    auto left2_down1 = pair<int, int>(oldP.first + 1, oldP.second - 2);
+    auto right1_down2 = pair<int, int>(oldP.first + 2, oldP.second + 1);
+    auto right2_down1 = pair<int, int>(oldP.first + 1, oldP.second + 2);
 
     //left1_top2
     if(isOnBoard(left1_top2) && isEmptyOrEnemy(board, color, left1_top2) &&
@@ -383,15 +390,16 @@ void getHorseMove(QPair<int,int> oldP,  PIECE_COLOR color, Board* board, vector<
 
 
 }
-void getChariotMove(QPair<int,int> oldP,  PIECE_COLOR color, Board* board, vector<ChessMove>& chessMove)
+void getChariotMove(pair<int,int> oldP,  PIECE_COLOR color, Board* board, vector<ChessMove>& chessMove)
 {
     //往上走
+    qDebug()<<"cnm";
     for(int r = oldP.first - 1; r >= 0; --r) {
         if(board->getPieceType(r, oldP.second) == NO_PIECE)
-            chessMove.push_back(ChessMove(oldP, QPair<int, int>{r, oldP.second}));
+            chessMove.push_back(ChessMove(oldP, pair<int, int>{r, oldP.second}));
         else {
             if(board->getPieceColor(r, oldP.second) != color)
-                chessMove.push_back(ChessMove(oldP, QPair<int, int>{r, oldP.second}));
+                chessMove.push_back(ChessMove(oldP, pair<int, int>{r, oldP.second}));
             break;
         }
     }
@@ -399,10 +407,10 @@ void getChariotMove(QPair<int,int> oldP,  PIECE_COLOR color, Board* board, vecto
     //往下走
     for(int r = oldP.first + 1; r <= 9; ++r) {
         if(board->getPieceType(r, oldP.second) == NO_PIECE)
-            chessMove.push_back(ChessMove(oldP, QPair<int, int>{r, oldP.second}));
+            chessMove.push_back(ChessMove(oldP, pair<int, int>{r, oldP.second}));
         else {
             if(board->getPieceColor(r, oldP.second) != color)
-                chessMove.push_back(ChessMove(oldP, QPair<int, int>{r, oldP.second}));
+                chessMove.push_back(ChessMove(oldP, pair<int, int>{r, oldP.second}));
             break;
         }
     }
@@ -410,10 +418,10 @@ void getChariotMove(QPair<int,int> oldP,  PIECE_COLOR color, Board* board, vecto
     //往左走
     for(int c = oldP.second - 1; c >= 0; --c) {
         if(board->getPieceType(oldP.first, c) == NO_PIECE)
-            chessMove.push_back(ChessMove(oldP, QPair<int, int>{oldP.first, c}));
+            chessMove.push_back(ChessMove(oldP, pair<int, int>{oldP.first, c}));
         else {
             if(board->getPieceColor(oldP.first, c) != color)
-                chessMove.push_back(ChessMove(oldP, QPair<int,int>{oldP.first, c}));
+                chessMove.push_back(ChessMove(oldP, pair<int,int>{oldP.first, c}));
             break;
         }
     }
@@ -421,30 +429,30 @@ void getChariotMove(QPair<int,int> oldP,  PIECE_COLOR color, Board* board, vecto
     //往右走
     for(int c = oldP.second + 1; c <= 8; ++c) {
         if(board->getPieceType(oldP.first, c) == NO_PIECE)
-            chessMove.push_back(ChessMove(oldP, QPair<int, int>{oldP.first, c}));
+            chessMove.push_back(ChessMove(oldP, pair<int, int>{oldP.first, c}));
         else {
             if(board->getPieceColor(oldP.first, c) != color)
-                chessMove.push_back(ChessMove(oldP, QPair<int,int>{oldP.first, c}));
+                chessMove.push_back(ChessMove(oldP, pair<int,int>{oldP.first, c}));
             break;
         }
     }
 }
 
 
-void getCannoMove(QPair<int,int> oldP,  PIECE_COLOR color, Board* board, vector<ChessMove>& chessMove)
+void getCannoMove(pair<int,int> oldP,  PIECE_COLOR color, Board* board, vector<ChessMove>& chessMove)
 {
     //往上走
     bool MidPiece = false;
     for(int r = oldP.first - 1; r >= 0; --r) {
         if(!MidPiece && board->getPieceType(r, oldP.second) == NO_PIECE)
-            chessMove.push_back(ChessMove(oldP, QPair<int, int>{r, oldP.second}));
+            chessMove.push_back(ChessMove(oldP, pair<int, int>{r, oldP.second}));
         else {
             if(!MidPiece)
                 MidPiece = true;
             else if(board->getPieceType(r, oldP.second) == NO_PIECE)
                 continue;
             else if(board->getPieceColor(r, oldP.second) != color) {
-                chessMove.push_back(ChessMove(oldP, QPair<int, int>{r, oldP.second}));
+                chessMove.push_back(ChessMove(oldP, pair<int, int>{r, oldP.second}));
                 break;
             }
             else break;
@@ -454,14 +462,14 @@ void getCannoMove(QPair<int,int> oldP,  PIECE_COLOR color, Board* board, vector<
     MidPiece = false;
     for(int r = oldP.first + 1; r <= 9; ++r) {
         if(!MidPiece && board->getPieceType(r, oldP.second) == NO_PIECE)
-            chessMove.push_back(ChessMove(oldP, QPair<int, int>{r, oldP.second}));
+            chessMove.push_back(ChessMove(oldP, pair<int, int>{r, oldP.second}));
         else {
             if(!MidPiece)
                 MidPiece = true;
             else if(board->getPieceType(r, oldP.second) == NO_PIECE)
                 continue;
             else if(board->getPieceColor(r, oldP.second) != color) {
-                chessMove.push_back(ChessMove(oldP, QPair<int, int>{r, oldP.second}));
+                chessMove.push_back(ChessMove(oldP, pair<int, int>{r, oldP.second}));
                 break;
             }
             else break;
@@ -471,14 +479,14 @@ void getCannoMove(QPair<int,int> oldP,  PIECE_COLOR color, Board* board, vector<
     MidPiece = false;
     for(int c = oldP.second - 1; c >= 0; --c) {
         if(!MidPiece && board->getPieceType(oldP.first, c) == NO_PIECE)
-            chessMove.push_back(ChessMove(oldP, QPair<int, int>{oldP.first, c}));
+            chessMove.push_back(ChessMove(oldP, pair<int, int>{oldP.first, c}));
         else {
             if(!MidPiece)
                 MidPiece = true;
             else if(board->getPieceType(oldP.first, c) == NO_PIECE)
                 continue;
             else if(board->getPieceColor(oldP.first, c) != color) {
-                chessMove.push_back(ChessMove(oldP, QPair<int, int>{oldP.first, c}));
+                chessMove.push_back(ChessMove(oldP, pair<int, int>{oldP.first, c}));
                 break;
             }
             else break;
@@ -488,14 +496,14 @@ void getCannoMove(QPair<int,int> oldP,  PIECE_COLOR color, Board* board, vector<
     MidPiece = false;
     for(int c = oldP.second + 1; c <= 8; --c) {
         if(!MidPiece && board->getPieceType(oldP.first, c) == NO_PIECE)
-            chessMove.push_back(ChessMove(oldP, QPair<int, int>{oldP.first, c}));
+            chessMove.push_back(ChessMove(oldP, pair<int, int>{oldP.first, c}));
         else {
             if(!MidPiece)
                 MidPiece = true;
             else if(board->getPieceType(oldP.first, c) == NO_PIECE)
                 continue;
             else if(board->getPieceColor(oldP.first, c) != color) {
-                chessMove.push_back(ChessMove(oldP, QPair<int, int>{oldP.first, c}));
+                chessMove.push_back(ChessMove(oldP, pair<int, int>{oldP.first, c}));
                 break;
             }
             else break;
@@ -505,16 +513,16 @@ void getCannoMove(QPair<int,int> oldP,  PIECE_COLOR color, Board* board, vector<
 }
 
 
-void getSoldierMove(QPair<int,int> oldP,  PIECE_COLOR color, Board* board, vector<ChessMove>& chessMove){
+void getSoldierMove(pair<int,int> oldP,  PIECE_COLOR color, Board* board, vector<ChessMove>& chessMove){
     if ((color == BLACK && oldP.first > 4) || (color == RED && oldP.first < 5)) {
         //左
-        auto left = QPair<int, int>{oldP.first, oldP.second - 1};
+        auto left = pair<int, int>{oldP.first, oldP.second - 1};
         if(isEmptyOrEnemy(board, color, left)) {
             ChessMove move(oldP, left);
             chessMove.push_back(move);
         }
         //右
-        auto right = QPair<int, int>{oldP.first, oldP.second + 1};
+        auto right = pair<int, int>{oldP.first, oldP.second + 1};
         if((isEmptyOrEnemy(board, color, right))) {
             ChessMove move(oldP, right);
             chessMove.push_back(move);
@@ -522,7 +530,7 @@ void getSoldierMove(QPair<int,int> oldP,  PIECE_COLOR color, Board* board, vecto
     }
 
     if (color == BLACK) {
-        auto down = QPair<int, int>{oldP.first + 1, oldP.second};
+        auto down = pair<int, int>{oldP.first + 1, oldP.second};
         if(isEmptyOrEnemy(board, color, down)) {
             ChessMove move(oldP, down);
             chessMove.push_back(move);
@@ -531,7 +539,7 @@ void getSoldierMove(QPair<int,int> oldP,  PIECE_COLOR color, Board* board, vecto
     }
 
     if (color == RED) {
-        auto top = QPair<int, int>{oldP.first - 1, oldP.second};
+        auto top = pair<int, int>{oldP.first - 1, oldP.second};
         if(isEmptyOrEnemy(board, color, top)) {
             ChessMove move(oldP, top);
             chessMove.push_back(move);
@@ -541,13 +549,13 @@ void getSoldierMove(QPair<int,int> oldP,  PIECE_COLOR color, Board* board, vecto
 
 }
 
-bool isOnBoard(QPair<int, int> p) {
+bool isOnBoard(pair<int, int> p) {
     if (p.first < 0 || p.first > 9 || p.second < 0 || p.second > 8)
         return false;
     return true;
 }
 
-bool isEmptyOrEnemy(Board* board, PIECE_COLOR color, QPair<int, int> pos) {
+bool isEmptyOrEnemy(Board* board, PIECE_COLOR color, pair<int, int> pos) {
     return board->getPieceType(pos.first, pos.second) == NO_PIECE
             || board->getPieceColor(pos.first, pos.second) != color;
 }

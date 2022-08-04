@@ -1,8 +1,10 @@
 #include "widget.h"
 #include "ui_widget.h"
+#include "ai.h"
 #include <QPainter>
 #include <QDebug>
 #include <QDesktopWidget>
+#include <windows.h>
 
 Widget::Widget(QWidget *parent, GAME_MODE mode)
     : QWidget(parent),
@@ -13,7 +15,6 @@ Widget::Widget(QWidget *parent, GAME_MODE mode)
     resize(WINDOW_WIDTH_DEFAULT , WINDOW_HEIGHT_DEFAULT);
     setMinimumSize(WINDOW_WIDTH_DEFAULT , WINDOW_HEIGHT_DEFAULT);
     if(game_mode == PVE) {
-      // m_gameController->ai = new Ai();
         qDebug()<<"PVE";
     }
     if(game_mode == PVP)
@@ -44,7 +45,6 @@ void Widget::paintEvent(QPaintEvent *event)
     //get window info (excluding any window frame)
     int windowWidth = this->geometry().width();
     int windowHeight = this->geometry().height();
-    qDebug()<<windowWidth<<windowHeight;
     float scaleY = static_cast<float>(windowHeight) / static_cast<float>(WINDOW_HEIGHT_DEFAULT);
 
     //set the size of the pixmap
@@ -126,7 +126,7 @@ void Widget::paintEvent(QPaintEvent *event)
     if(m_gameController->getGameState() == WAIT_PLAYER_MOVE)
     {
         drawBoard3(pp, pen, m_gameController->getChosePos().first, m_gameController->getChosePos().second);
-        qDebug()<<m_gameController->getChosePos().first<<m_gameController->getChosePos().second;
+//        qDebug()<<"Player Choose:"<<m_gameController->getChosePos().first<<m_gameController->getChosePos().second;
     }
 
     painter.drawPixmap(m_gap / 2, m_gap / 2, pix);
@@ -157,6 +157,11 @@ void Widget::mousePressEvent(QMouseEvent *event)
         showGameResult(currentState);
 
     if(game_mode == PVE && currentState == WAIT_AI_MOVE) {
+        Ai *ai = new Ai(m_gameController->getBoard(), BLACK);
+        MCTSTreeNode *node = ai->tree.mctsSearch();
+//        m_gameController->setBoard(&(node->board));
+//        currentState = WAIT_PLAYER_CHOOSE_PIECE;
+//        update();
         //TODO AI logic;
     }
 }

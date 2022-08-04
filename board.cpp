@@ -9,6 +9,21 @@ Board::Board()
     init();
 }
 
+Board::Board(Board &b)
+{
+    for(int i = 0; i < 10; ++i){
+        for(int j = 0; j < 9; ++j) {
+            m_chessBoard[i][j] = b.m_chessBoard[i][j]; //store Piece idx of every board position
+            m_pieceType[i][j] = b.m_pieceType[i][j];
+        }
+    }
+    for(int i = 0; i < 32; ++i) {
+        m_pieces[i] = b.m_pieces[i];
+        m_pieces[i].m_board = nullptr;
+    }
+}
+
+
 void Board::init()
 {
     initBoard();
@@ -42,7 +57,7 @@ void Board::initBoard()
 }
 
 
-bool Board::canMove(QPair<int, int> oldP, QPair<int, int> newP)
+bool Board::canMove(pair<int, int> oldP, pair<int, int> newP)
 {
     Piece *pieceOld = &m_pieces[m_chessBoard[oldP.first][oldP.second]];
     Piece *pieceNew = &m_pieces[m_chessBoard[newP.first][newP.second]];
@@ -58,10 +73,12 @@ bool Board::canMove(QPair<int, int> oldP, QPair<int, int> newP)
 }
 
 
-void Board::movePiece(QPair<int, int> oldP, QPair<int, int> newP)
+void Board::movePiece(pair<int, int> oldP, pair<int, int> newP)
 {
+    //新位置的旧棋子
     PIECE_TYPE type = m_pieceType[newP.first][newP.second];
 
+    //新位置有棋子
     //Destroy the target position pieces
     if(type != NO_PIECE)
     {
@@ -78,6 +95,10 @@ void Board::movePiece(QPair<int, int> oldP, QPair<int, int> newP)
     setPieceID(oldP.first, oldP.second, -1);
     setPieceType(oldP.first, oldP.second, NO_PIECE);
 
+}
+
+void Board::movePiece(const ChessMove &chessMove) {
+    movePiece(chessMove.from, chessMove.to);
 }
 
 

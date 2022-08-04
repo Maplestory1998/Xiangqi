@@ -21,6 +21,7 @@ SOURCES += \
     dialog.cpp \
     gamecontroller.cpp \
     main.cpp \
+    mctstree.cpp \
     mctstreenode.cpp \
     msgdialog.cpp \
     piece.cpp \
@@ -31,6 +32,7 @@ HEADERS += \
     board.h \
     dialog.h \
     gamecontroller.h \
+    mctstree.h \
     mctstreenode.h \
     msgdialog.h \
     piece.h \
