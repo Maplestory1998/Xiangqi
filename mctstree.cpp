@@ -38,12 +38,17 @@ MCTSTreeNode *MCTSTree::rolloutPolicy(MCTSTreeNode *node)
     while(node->board->getPieceType(r, c) == NO_PIECE && node->board->getPieceColor(r, c) != node->currentColor)
     {
         r = rand() % 10;
-        c = rand() % 10;
+        c = rand() % 9;
     }
 
     int idx  = node->board->getPieceID(r, c);
     vector<ChessMove> move;
     node->board->getPiece(idx).allMoveMethod(pair<int,int>(r,c), node->currentColor, node->board, move );
+    if(move.empty()) {
+        node->isTerminal = true;
+        node->winner = node->currentColor == RED?  BLACK: RED;
+        return node;
+    }
     int randIdx = rand() % move.size();
     MCTSTreeNode *next = new MCTSTreeNode(node->board, node->currentColor == BLACK? RED : BLACK, &move[randIdx], node);
 
@@ -125,10 +130,6 @@ void MCTSTree::generateChildren(MCTSTreeNode *node) {
             int idx = node->board->getPieceID(i, j);
             if (idx != -1)
             {
-                qDebug()<<"sb";
-                Board *board = node->board;
-                if(board == nullptr)
-                    qDebug()<<"maoqian";
                 node->board->getPiece(idx).allMoveMethod(pair<int,int>(i, j),node->board->getPieceColor(i, j), node->board, chessMove);
             }
         }

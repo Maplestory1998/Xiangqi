@@ -68,6 +68,10 @@ Piece::Piece(const Piece &piece) :m_type(piece.m_type), m_color(piece.m_color), 
 
 }
 
+Piece::~Piece() {
+    m_board = nullptr;
+}
+
 void Piece::Init(int id)
 {
     //m_row = g_initialPos[id].row;
@@ -393,7 +397,6 @@ void getHorseMove(pair<int,int> oldP,  PIECE_COLOR color, Board* board, vector<C
 void getChariotMove(pair<int,int> oldP,  PIECE_COLOR color, Board* board, vector<ChessMove>& chessMove)
 {
     //往上走
-    qDebug()<<"cnm";
     for(int r = oldP.first - 1; r >= 0; --r) {
         if(board->getPieceType(r, oldP.second) == NO_PIECE)
             chessMove.push_back(ChessMove(oldP, pair<int, int>{r, oldP.second}));

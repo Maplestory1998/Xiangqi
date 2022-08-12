@@ -156,11 +156,20 @@ void Widget::mousePressEvent(QMouseEvent *event)
     if(currentState == RED_WIN || currentState == BLACK_WIN)
         showGameResult(currentState);
 
+//    for (int i = 0; i < 10; ++i){
+//        for (int j = 0; j < 9; ++j)
+//            qDebug()<<m_gameController->getBoard()->getPieceID(i, j);
+//    }
+//    qDebug()<<"cnm";
     if(game_mode == PVE && currentState == WAIT_AI_MOVE) {
         Ai *ai = new Ai(m_gameController->getBoard(), BLACK);
         MCTSTreeNode *node = ai->tree.mctsSearch();
-//        m_gameController->setBoard(&(node->board));
-//        currentState = WAIT_PLAYER_CHOOSE_PIECE;
+        for (int i = 0; i < 10; ++i) {
+            for (int j = 0; j < 9; ++j)
+                qDebug()<<node->board->getPieceID(i, j);
+        }
+        m_gameController->setBoard(node->board);
+        currentState = WAIT_PLAYER_CHOOSE_PIECE;
 //        update();
         //TODO AI logic;
     }

@@ -15,8 +15,11 @@ GameController::~GameController()
 GAME_STATE GameController::controller(int _row, int _col, GAME_MODE gameMode)
 {
     if(_row < 0 || _row > 9 || _col < 0 || _col > 8)
+    {
+        if(m_gameState == WAIT_PLAYER_MOVE)
+            m_gameState = WAIT_PLAYER_CHOOSE_PIECE;
         return m_gameState;
-
+    }
     if(m_gameState == WAIT_PLAYER_CHOOSE_PIECE)
     {
         if(m_board->getPieceType(_row, _col) == NO_PIECE || m_board->getPieceColor(_row, _col) != m_currentPlayer)

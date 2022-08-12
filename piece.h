@@ -63,6 +63,8 @@ class Piece
 public:
     Piece();
     Piece(const Piece &piece);
+    ~Piece();
+
     PIECE_COLOR getColor(){return m_color;}
     PIECE_TYPE getType(){return m_type;}
     void Init(int id);
