@@ -1,17 +1,29 @@
 #include "gamecontroller.h"
 #include "QtDebug"
 
-GameController::GameController() : m_board (&g_board),  m_gameState(WAIT_PLAYER_CHOOSE_PIECE), m_currentPlayer(RED)
+GameController::GameController(GAME_MODE mode) : m_board (&g_board),  m_gameState(WAIT_PLAYER_CHOOSE_PIECE), m_currentPlayer(RED), ai(nullptr)
 {
-    ai = nullptr;
+    if (mode == PVE) {
+        ai = new Ai(m_board, BLACK);
+    }
 }
 
 GameController::~GameController()
 {
-
+    delete ai;
+    if (board != &g_board) {
+        delete board;
+    }
 }
 
-
+/**
+ * @brief Game Controller, called when the player choose piece
+ * 
+ * @param _row 
+ * @param _col 
+ * @param gameMode 
+ * @return GAME_STATE 
+ */
 GAME_STATE GameController::controller(int _row, int _col, GAME_MODE gameMode)
 {
     if(_row < 0 || _row > 9 || _col < 0 || _col > 8)
@@ -56,6 +68,6 @@ GAME_STATE GameController::controller(int _row, int _col, GAME_MODE gameMode)
 
 
 void GameController::setBoard(Board *_board){
+    *m_board = *_board; 
     delete m_board;
-    m_board = new Board(*_board);;
 }

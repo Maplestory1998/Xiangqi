@@ -3,6 +3,7 @@
 #include <QPoint>
 #include "board.h"
 #include "ai.h"
+
 enum GAME_MODE{
     PVP,
     PVE,
@@ -21,8 +22,9 @@ enum GAME_STATE{
 class GameController
 {
 public:
-    GameController();
+    GameController(GAME_MODE mode);
     ~GameController();
+
     Board* getBoard() { return m_board;}
     void setBoard(Board *_board);
     void setGameState(GAME_STATE state){m_gameState = state;}
@@ -36,8 +38,6 @@ public:
     void setChosePos(int r, int c) {m_chosePos = {r, c};}
     void setCurPos(int r, int c) { m_curPos = {r, c};}
 
-    Ai* ai;
-
 private:
 
     Board *m_board;
@@ -49,6 +49,8 @@ private:
     //轮到谁走棋了
     PIECE_COLOR m_currentPlayer;
 
+public:
+    Ai *ai;
 };
 
 #endif // GAMECONTROLLER_H

@@ -8,7 +8,7 @@
 
 Widget::Widget(QWidget *parent, GAME_MODE mode)
     : QWidget(parent),
-    ui(new Ui::Widget), m_gameController(new GameController), game_mode(mode),
+    ui(new Ui::Widget), m_gameController(new GameController(mode)), game_mode(mode),
     m_chessSize(0),   m_gap(0), m_step(0)
 {
     ui->setupUi(this);
@@ -54,6 +54,7 @@ void Widget::paintEvent(QPaintEvent *event)
     QPainter painter(this);
     QPixmap pix(size , size);
     pix.fill(Qt::white);
+
     //新建QPainter类对象，在pix上进行绘图
     QPainter pp(&pix);
 
@@ -123,6 +124,7 @@ void Widget::paintEvent(QPaintEvent *event)
 
 
     //等待玩家移动
+    //Displaying Auxiliary Information
     if(m_gameController->getGameState() == WAIT_PLAYER_MOVE)
     {
         drawBoard3(pp, pen, m_gameController->getChosePos().first, m_gameController->getChosePos().second);
@@ -145,10 +147,8 @@ void Widget::mousePressEvent(QMouseEvent *event)
     int cIdx = static_cast<float>(posX - m_topLeft.x()) / static_cast<float>(m_step) + 0.5f;
     int rIdx = static_cast<float>(posY - m_topLeft.y()) / static_cast<float>(m_step) + 0.5f;
 
+    //
     PIECE_TYPE type = m_gameController->getBoard()->getPieceType(rIdx, cIdx);
-
-    qDebug()<<rIdx<<cIdx;
-    qDebug()<<type;
 
     GAME_STATE currentState = m_gameController->controller(rIdx, cIdx, game_mode);
 
@@ -229,7 +229,11 @@ void Widget::drawBoard3(QPainter &pp, QPen &oldPen, int r, int c)
 
 }
 
-
+/**
+ * @brief Game End, show the result
+ * 
+ * @param gameState 
+ */
 void Widget::showGameResult(GAME_STATE gameState){
     if( RED_WIN == gameState)
         n = new MsgDialog(this, "Red Player Win!");

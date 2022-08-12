@@ -24,12 +24,8 @@ public:
     Widget(QWidget *parent = nullptr, GAME_MODE mode = PVP);
     ~Widget();
 
-
-
-
 protected:
     void paintEvent(QPaintEvent *event) override;
-    //void mouseMoveEvent(QMouseEvent *event) override();
     void mousePressEvent(QMouseEvent *event) override;
 
 private:
@@ -39,10 +35,12 @@ private:
 
     void showGameResult(GAME_STATE gameState);
 
+
+private:
     //new Widget to show the result
     QDialog *n;
-
     Ui::Widget *ui;
+    
     GameController *m_gameController;
     GAME_MODE game_mode;
 
