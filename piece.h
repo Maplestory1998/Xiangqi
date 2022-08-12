@@ -79,7 +79,7 @@ public:
     Piece& operator=(const Piece& _p);
     ~Piece();
 
-    c
+
     PIECE_COLOR getColor(){
         PIECE_COLOR color = m_type <= BLACK_SOLDIER? BLACK : RED;
         return color;

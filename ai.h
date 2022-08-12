@@ -11,9 +11,9 @@ class Ai
 {
 public:
     Ai(Board *_board, PIECE_COLOR _color);
-    Ai::(const Ai &ai) = delete;
+    Ai(const Ai &ai) = delete;
     Ai& operator=(const Ai &ai) = delete;
-    ～Ai();
+    ~Ai();
 
 
 public:

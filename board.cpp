@@ -19,7 +19,8 @@ Board::Board(const Board &b) {
 }
 
 Board& Board::operator=(const Board &b) {
-    copyOrAssign(b)
+    copyOrAssign(b);
+    return *this;
 }
 
 void Board::copyOrAssign(const Board &b) {
@@ -72,14 +73,20 @@ void Board::initBoard()
 bool Board::canMove(pair<int, int> oldP, pair<int, int> newP)
 {
     Piece *pieceOld = &m_pieces[m_chessBoard[oldP.first][oldP.second]];
+    if (getPieceID(newP.first, newP.second) == -1 ) {
+        return pieceOld->canPieceMove(oldP, newP, pieceOld->getColor(), this);
+    }
+
     Piece *pieceNew = &m_pieces[m_chessBoard[newP.first][newP.second]];
 
     //same Color, return false
     if(pieceNew->getType() != NO_PIECE && (pieceOld->getColor() == pieceNew->getColor()))
     {
+        qDebug()<<pieceNew->getType();
+        qDebug()<<pieceNew->getColor();
+        qDebug()<<pieceOld->getColor();
         return false;
     }
-
     return pieceOld->canPieceMove(oldP, newP, pieceOld->getColor(), this);
 }
 

@@ -11,8 +11,8 @@ GameController::GameController(GAME_MODE mode) : m_board (&g_board),  m_gameStat
 GameController::~GameController()
 {
     delete ai;
-    if (board != &g_board) {
-        delete board;
+    if (m_board != &g_board) {
+        delete m_board;
     }
 }
 
@@ -26,12 +26,12 @@ GameController::~GameController()
  */
 GAME_STATE GameController::controller(int _row, int _col, GAME_MODE gameMode)
 {
-    if(_row < 0 || _row > 9 || _col < 0 || _col > 8)
-        return m_gameState;
 
     if(m_gameState == WAIT_PLAYER_CHOOSE_PIECE)
     {
-        if(m_board->getPieceType(_row, _col) == NO_PIECE || m_board->getPieceColor(_row, _col) != m_currentPlayer)
+        if (_row < 0 || _row > 9 || _col < 0 || _col > 8 ||
+                m_board->getPieceType(_row, _col) == NO_PIECE ||
+                m_board->getPieceColor(_row, _col) != m_currentPlayer)
             return m_gameState;
 
         m_gameState = WAIT_PLAYER_MOVE;
@@ -40,6 +40,11 @@ GAME_STATE GameController::controller(int _row, int _col, GAME_MODE gameMode)
     }
     else if(m_gameState ==  WAIT_PLAYER_MOVE)
     {
+        if (_row < 0 || _row > 9 || _col < 0 || _col > 8) {
+            m_gameState = WAIT_PLAYER_CHOOSE_PIECE;
+            return m_gameState;
+        }
+
         setCurPos(_row, _col);
         bool res = getBoard()->canMove(getChosePos(), getCurPos());
 

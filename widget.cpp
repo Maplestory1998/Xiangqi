@@ -149,6 +149,7 @@ void Widget::mousePressEvent(QMouseEvent *event)
 
     //
     PIECE_TYPE type = m_gameController->getBoard()->getPieceType(rIdx, cIdx);
+    qDebug()<<"type:"<<type;
 
     GAME_STATE currentState = m_gameController->controller(rIdx, cIdx, game_mode);
 
@@ -158,7 +159,7 @@ void Widget::mousePressEvent(QMouseEvent *event)
 
     if(game_mode == PVE && currentState == WAIT_AI_MOVE) {
         Ai *ai = new Ai(m_gameController->getBoard(), BLACK);
-        MCTSTreeNode *node = ai->tree.mctsSearch();
+//        MCTSTreeNode *node = ai->tree.mctsSearch();
 //        m_gameController->setBoard(&(node->board));
 //        currentState = WAIT_PLAYER_CHOOSE_PIECE;
 //        update();

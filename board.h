@@ -32,8 +32,8 @@ public:
     //获取位置为row，col的棋子类型
     inline PIECE_TYPE getPieceType(int row, int col)
     {
-        int pieceId = getPiece(row, col);
-        return pieceId == -1? NO_PIECE : m_pieces[pieceId].getType;
+        int pieceId = getPieceID(row, col);
+        return pieceId == -1? NO_PIECE : m_pieces[pieceId].getType();
     }
 
     //获取位置为row，col的棋子颜色
@@ -64,7 +64,7 @@ private:
     //存储每个位置的棋子id
     int m_chessBoard[10][9]; //store Piece idx of every board position
     //存储每个棋子的位置
-    Picece m_pieces[32];   //store the position info of 32 pieces
+    Piece m_pieces[32];   //store the position info of 32 pieces
 };
 
 extern Board g_board;

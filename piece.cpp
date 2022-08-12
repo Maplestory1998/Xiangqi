@@ -69,12 +69,12 @@ Piece::Piece(const Piece &piece) :m_type(piece.m_type), m_exist(piece.m_exist),
 
 }
 
-Piece& Piece::operator=(const Piece& p) : {
+Piece& Piece::operator=(const Piece& p) {
     m_board = nullptr;
     pos = p.pos;
     m_type = p.m_type;
     m_exist = p.m_exist;
-
+    return *this;
 }
 
 Piece::~Piece()
