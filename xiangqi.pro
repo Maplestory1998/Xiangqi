@@ -19,6 +19,7 @@ SOURCES += \
     ai.cpp \
     board.cpp \
     dialog.cpp \
+    evaluation.cpp \
     gamecontroller.cpp \
     main.cpp \
     mctstree.cpp \
@@ -31,6 +32,7 @@ HEADERS += \
     ai.h \
     board.h \
     dialog.h \
+    evaluation.h \
     gamecontroller.h \
     mctstree.h \
     mctstreenode.h \

@@ -27,6 +27,7 @@ public:
     void setPieceID(int row, int col, int idx)
     {
         m_chessBoard[row][col] = idx;
+        m_pieces[idx].setPos(row, col);
     }
 
     //获取位置为row，col的棋子类型
