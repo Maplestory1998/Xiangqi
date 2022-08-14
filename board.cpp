@@ -70,7 +70,7 @@ void Board::initBoard()
  * @return true 
  * @return false 
  */
-bool Board::canMove(pair<int, int> oldP, pair<int, int> newP)
+bool Board::canMove(const pair<int, int> &oldP,const pair<int, int> &newP)
 {
     Piece *pieceOld = &m_pieces[m_chessBoard[oldP.first][oldP.second]];
     if (getPieceID(newP.first, newP.second) == -1 ) {
@@ -97,23 +97,24 @@ bool Board::canMove(pair<int, int> oldP, pair<int, int> newP)
  * @param oldP 
  * @param newP 
  */
-void Board::movePiece(pair<int, int> oldP, pair<int, int> newP)
+void Board::movePiece(const pair<int, int> &oldP, const pair<int, int> &newP)
 {
     //Piece on oldP
 
-    PIECE_TYPE type = getPieceType(newP.first, newP.second);
+    PIECE_TYPE type = getPieceType(newP);
 
     //Destroy the target position pieces
     if(type != NO_PIECE)
     {
         int destroyedChessIdx = m_chessBoard[newP.first][newP.second];
         m_pieces[destroyedChessIdx].destroyPiece();
+        m_chessBoard[newP.first][newP.second] = -1;
     }
-
     //move to target
     int movedChessIdx = m_chessBoard[oldP.first][oldP.second];
     setPieceID(newP.first, newP.second, movedChessIdx);
     setPieceID(oldP.first, oldP.second, -1);
+
 }
 
 /**

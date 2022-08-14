@@ -44,6 +44,7 @@ enum PIECE_TYPE{
 
 enum PIECE_COLOR
 {
+    NO_COLOR,
     RED,
     BLACK,
 };
@@ -96,6 +97,8 @@ public:
 
 
     PIECE_COLOR getColor(){
+        if (m_type == NO_PIECE)
+            return NO_COLOR;
         PIECE_COLOR color = m_type <= BLACK_SOLDIER? BLACK : RED;
         return color;
     }
@@ -120,8 +123,12 @@ public:
         pos.first = row;
         pos.second = col;
     }
-    void setPos(pair<int,int> &_pos) {
+    void setPos(const pair<int,int> &_pos) {
         pos = _pos;
+    }
+
+    void setBoard(Board *_b) {
+        m_board = _b;
     }
 
     int getValue(){return value;}

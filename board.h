@@ -27,7 +27,8 @@ public:
     void setPieceID(int row, int col, int idx)
     {
         m_chessBoard[row][col] = idx;
-        m_pieces[idx].setPos(row, col);
+        if (idx != -1)
+            m_pieces[idx].setPos(row, col);
     }
 
     //获取位置为row，col的棋子类型
@@ -35,6 +36,10 @@ public:
     {
         int pieceId = getPieceID(row, col);
         return pieceId == -1? NO_PIECE : m_pieces[pieceId].getType();
+    }
+
+    inline PIECE_TYPE getPieceType(const pair<int,int> p) {
+        return getPieceType(p.first, p.second);
     }
 
     //获取位置为row，col的棋子颜色
@@ -45,10 +50,10 @@ public:
     }
 
     //棋子能否从oldP移动到newP
-    bool canMove(pair<int,int> oldP, pair<int, int> newP);
+    bool canMove(const pair<int,int> &oldP, const pair<int, int> &newP);
 
     //移动棋子
-    void movePiece(pair<int, int> oldP, pair<int, int> newP);
+    void movePiece(const pair<int, int> &oldP, const pair<int, int> &newP);
 
     void movePiece(const ChessMove &chessMove);
 

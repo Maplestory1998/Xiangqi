@@ -21,6 +21,7 @@ public:
 public:
     //是红色还是黑子走棋
     PIECE_COLOR currentColor;
+    PIECE_COLOR winner;
     //是否是终点
     bool isTerminal;
     //是否被完全扩展

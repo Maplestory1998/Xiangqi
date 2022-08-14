@@ -19,13 +19,25 @@ MCTSTreeNode* MCTSTree::mctsSearch()
 {
     time_t begin = clock();
     time_t end = clock();
-    while(difftime(end, begin) <= 10000) {
+//    while(difftime(end, begin) <= 1) {
         end = clock();
         MCTSTreeNode* leaf = traverse(root);
         int reward = rollout(leaf);
         backpropogate(leaf, reward);
+//    }
+
+    MCTSTreeNode *res = bestChild(root);
+    if (res == leaf)
+        qDebug()<<"truetrue";
+    else qDebug()<<"falsefalse";
+    for (int i = 0; i < 10; ++i) {
+        qDebug()<<"----------------";
+        for (int j = 0; j < 9; ++j) {
+            qDebug()<<res->board->getPieceType(i, j);
+        }
+
     }
-    return bestChild(root);
+    return res;
 }
 
 
@@ -49,7 +61,7 @@ MCTSTreeNode *MCTSTree::rolloutPolicy(MCTSTreeNode *node)
     vector<ChessMove> move;
     while (move.size() == 0) {
         int idx = rand() % 32;
-        while (node->board->getPiece(idx).isExist == false || node->board->getPiece(idx).getColor() != node->currentColor) {
+        while (node->board->getPiece(idx).isExist() == false || node->board->getPiece(idx).getColor() != node->currentColor) {
             idx = rand() % 32;
         }
 
@@ -78,6 +90,7 @@ MCTSTreeNode* MCTSTree::pickUnvisited(MCTSTreeNode *node)
 {
     if (node->numVisited == 0) {
         generateChildren(node);
+        qDebug()<<node->children.size();
         MCTSTreeNode *res = randomChoice(node->children);
         return res;
     }
@@ -94,23 +107,34 @@ MCTSTreeNode* MCTSTree::pickUnvisited(MCTSTreeNode *node)
 MCTSTreeNode* MCTSTree::bestChild(MCTSTreeNode *node) {
     double bestValue = 0.0;
     vector<MCTSTreeNode*> bestNodes;
+    qDebug()<<"children's size"<<node->children.size();
     for (MCTSTreeNode *child  : node->children) {
         if (child->numVisited == 0)
             continue;
         double nodeValue = 0.0;
-        if (node->currentColor != aiColor) {
-            nodeValue = static_cast<double>(node->numAiWin) / static_cast<double>(node->numVisited)
+        if (child->currentColor != aiColor) {
+            nodeValue = static_cast<double>(child->numAiWin) / static_cast<double>(child->numVisited)
                                         + explorationValue * sqrt(2.0 * log(node->numVisited) / child->numVisited);
         } else
-            nodeValue = static_cast<double>(node->numVisited - node->numAiWin) /static_cast<double>(node->numVisited)
+            nodeValue = static_cast<double>(child->numVisited - child->numAiWin) /static_cast<double>(child->numVisited)
                                         + explorationValue * sqrt(2.0 * log(node->numVisited) / child->numVisited);
 
         if (nodeValue > bestValue + eps) {
             bestValue = nodeValue;
             bestNodes.clear();
-            bestNodes.push_back(node);
+            bestNodes.push_back(child);
         } else if (abs(nodeValue - bestValue) < eps) {
-            bestNodes.push_back(node);
+            bestNodes.push_back(child);
+        }
+    }
+    qDebug()<<"bestNode's size: "<<bestNodes.size();
+    if(bestNodes.size() == 1) {
+        qDebug()<<"sb";
+        for (int i = 0; i < 10; ++i) {
+            for (int j = 0; j < 9; ++j) {
+                qDebug()<<bestNodes[0]->board->getPieceType(i, j);
+            }
+            qDebug()<<"----------------------------";
         }
     }
     return randomChoice(bestNodes);
@@ -137,8 +161,8 @@ void MCTSTree::generateChildren(MCTSTreeNode *node) {
     vector<ChessMove> chessMove;
     for (int i = 0; i < 32; ++i) {
         Piece p = node->board->getPiece(i);
-        if (p.isExist) {
-            p.allMoveMethod(pair<int, int>(p.getPos(), p.getColor()), node->board, chessMove);
+        if (p.isExist() && p.getColor() == aiColor) {
+            p.allMoveMethod(p.getPos(), p.getColor(), node->board, chessMove);
         }
     }
 
@@ -150,7 +174,7 @@ void MCTSTree::generateChildren(MCTSTreeNode *node) {
 
 
 
-MCTSTreeNode* MCTSTree::randomChoice(vector<MCTSTreeNode*> nodes) {
+MCTSTreeNode* MCTSTree::randomChoice(vector<MCTSTreeNode*> &nodes) {
     int idx = rand() % (nodes.size());
     return nodes[idx];
 }

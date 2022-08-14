@@ -64,7 +64,7 @@ Piece::Piece() : canPieceMove(nullptr), allMoveMethod(nullptr),m_exist(true) , m
 }
 
 Piece::Piece(const Piece &piece) :m_type(piece.m_type), m_exist(piece.m_exist), value(piece.value), flexibilityFactor(piece.flexibilityFactor),
-                                    m_board(nullptr), canPieceMove(piece.canPieceMove), allMoveMethod(piece.allMoveMethod),
+                                    m_board(nullptr), canPieceMove(piece.canPieceMove), allMoveMethod(piece.allMoveMethod), pos(piece.pos),
                                     getMoveMethodCnt(piece.getMoveMethodCnt),posEvalutaion(piece.posEvalutaion), maxMoveMethod(piece.maxMoveMethod)
 {
 
@@ -95,6 +95,7 @@ Piece::~Piece()
 void Piece::Init(int id)
 {
     pos = {g_initialPos[id].row, g_initialPos[id].col};
+
     m_type = g_initialPos[id].type;
     canPieceMove = g_initialPos[id].func;
     allMoveMethod = g_initialPos[id].func2;
@@ -570,7 +571,7 @@ void getCannoMove(const pair<int, int> &oldP,  PIECE_COLOR color, Board *board, 
 
     //right
     MidPiece = false;
-    for(int c = oldP.second + 1; c <= 8; --c) {
+    for(int c = oldP.second + 1; c <= 8; ++c) {
         if(!MidPiece && board->getPieceType(oldP.first, c) == NO_PIECE)
             chessMove.push_back(ChessMove(oldP, pair<int, int>{oldP.first, c}));
         else {
@@ -887,7 +888,7 @@ int getCannoMoveMethodsCnt(const pair<int,int> &oldP, PIECE_COLOR color, Board *
 
     //right
     MidPiece = false;
-    for(int c = oldP.second + 1; c <= 8; --c) {
+    for(int c = oldP.second + 1; c <= 8; ++c) {
         if(!MidPiece && board->getPieceType(oldP.first, c) == NO_PIECE)
             ++res;
         else {

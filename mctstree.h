@@ -18,7 +18,7 @@ public:
     void generateChildren(MCTSTreeNode *node);
 
 
-    MCTSTreeNode* randomChoice(vector<MCTSTreeNode*> nodes);
+    MCTSTreeNode* randomChoice(vector<MCTSTreeNode*> &nodes);
 
     //反向传播,update
     void backpropogate(MCTSTreeNode* node, int reward);

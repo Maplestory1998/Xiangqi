@@ -4,7 +4,7 @@
 
 MCTSTreeNode::MCTSTreeNode(Board* _board, PIECE_COLOR color, ChessMove *move, MCTSTreeNode *_parent):
      isTerminal(false), currentColor(color),
-    isFullyExpanded(false), parent(_parent), numVisited(0), numAiWin(0), VisitedChildrenCnt(0)
+    isFullyExpanded(false), parent(_parent), numVisited(0), numAiWin(0), visitedChildrenCnt(0)
 {
     board = new Board(*_board);
     if(move != nullptr) {

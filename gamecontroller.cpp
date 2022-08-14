@@ -45,6 +45,7 @@ GAME_STATE GameController::controller(int _row, int _col, GAME_MODE gameMode)
         setChosePos(_row, _col);
         return m_gameState;
     }
+
     else if(m_gameState ==  WAIT_PLAYER_MOVE)
     {
         if (_row < 0 || _row > 9 || _col < 0 || _col > 8) {
