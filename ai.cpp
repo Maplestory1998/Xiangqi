@@ -8,3 +8,11 @@ Ai::~Ai() {
     m_board = nullptr;
     delete tree;
 }
+
+void Ai::run(PIECE_COLOR _aiColor) {
+    tree = new MCTSTree(m_board, _aiColor);
+    MCTSTreeNode* node = tree->mctsSearch();
+    *m_board = *(node->board);
+    delete tree;
+    tree = nullptr;
+}

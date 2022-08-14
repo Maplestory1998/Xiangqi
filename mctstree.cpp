@@ -2,50 +2,64 @@
 #include <time.h>
 #include <QDebug>
 #include <piece.h>
+#include "evaluation.h"
 
-MCTSTree::MCTSTree(Board *_board, PIECE_COLOR color): root(new MCTSTreeNode(_board, color, nullptr)), aiColor(color)
-{
 
+
+MCTSTree::MCTSTree(Board *_board, PIECE_COLOR color): root(new MCTSTreeNode(_board, color, nullptr)), aiColor(color) {
+    
 }
+
+MCTSTree::~MCTSTree() {
+    delete root;
+}
+
 
 MCTSTreeNode* MCTSTree::mctsSearch()
 {
     time_t begin = clock();
     time_t end = clock();
-//    while(difftime(end, begin) <= 10000) {
-//        end = clock();
+    while(difftime(end, begin) <= 10000) {
+        end = clock();
         MCTSTreeNode* leaf = traverse(root);
         int reward = rollout(leaf);
         backpropogate(leaf, reward);
-//    }
+    }
     return bestChild(root);
 }
 
 
 int MCTSTree::rollout(MCTSTreeNode *node)
 {
-    while(!node->isTerminal) {
+    int layer = 3;
+    while(!node->isTerminal && layer > 0) {
         node = rolloutPolicy(node);
+        --layer;
     }
-    return node->winner == aiColor? 1 : 0;
+    if (node->isTerminal)
+        return node->winner == aiColor? 1 : 0;
+
+    PIECE_COLOR color = evalutationFunction(node->board);
+    return color == aiColor? 1 : 0;
 }
 
 
 MCTSTreeNode *MCTSTree::rolloutPolicy(MCTSTreeNode *node)
 {
-    int r = rand() % 10;
-    int c = rand() % 9;
-    while(node->board->getPieceType(r, c) == NO_PIECE && node->board->getPieceColor(r, c) != node->currentColor)
-    {
-        r = rand() % 10;
-        c = rand() % 10;
+    vector<ChessMove> move;
+    while (move.size() == 0) {
+        int idx = rand() % 32;
+        while (node->board->getPiece(idx).isExist == false || node->board->getPiece(idx).getColor() != node->currentColor) {
+            idx = rand() % 32;
+        }
+
+        Piece p = node->board->getPiece(idx);
+        p.allMoveMethod(p.getPos(), node->currentColor, node->board, move);
     }
 
-    int idx  = node->board->getPieceID(r, c);
-    vector<ChessMove> move;
-    node->board->getPiece(idx).allMoveMethod(pair<int,int>(r,c), node->currentColor, node->board, move );
-    int randIdx = rand() % move.size();
+    int randIdx = rand()% move.size();
     MCTSTreeNode *next = new MCTSTreeNode(node->board, node->currentColor == BLACK? RED : BLACK, &move[randIdx], node);
+    node->children.push_back(next);
 
     return next;
 
@@ -104,6 +118,13 @@ MCTSTreeNode* MCTSTree::bestChild(MCTSTreeNode *node) {
 
 
 void MCTSTree::backpropogate(MCTSTreeNode* node, int reward) {
+    for (auto child : node->children) {
+        delete child;
+        child = nullptr;
+    }
+    node->children.clear();
+    updateState(node->parent);
+    
     while(node != nullptr) {
         node->numVisited += 1;
         node->numAiWin += reward;
@@ -113,24 +134,11 @@ void MCTSTree::backpropogate(MCTSTreeNode* node, int reward) {
 
 
 void MCTSTree::generateChildren(MCTSTreeNode *node) {
-//    //存储每个位置的棋子id
-//    int m_chessBoard[10][9]; //store Piece idx of every board position
-//    //存储每个位置的棋子类型
-//    PIECE_TYPE m_pieceType[10][9];
-//    //存储每个棋子的位置
-//    Piece m_pieces[32];   //store the position info of 32
     vector<ChessMove> chessMove;
-    for (int i = 0; i < 10; ++i) {
-        for (int j = 0; j < 9; ++j) {
-            int idx = node->board->getPieceID(i, j);
-            if (idx != -1)
-            {
-                qDebug()<<"sb";
-                Board *board = node->board;
-                if(board == nullptr)
-                    qDebug()<<"maoqian";
-                node->board->getPiece(idx).allMoveMethod(pair<int,int>(i, j),node->board->getPieceColor(i, j), node->board, chessMove);
-            }
+    for (int i = 0; i < 32; ++i) {
+        Piece p = node->board->getPiece(i);
+        if (p.isExist) {
+            p.allMoveMethod(pair<int, int>(p.getPos(), p.getColor()), node->board, chessMove);
         }
     }
 
@@ -145,4 +153,11 @@ void MCTSTree::generateChildren(MCTSTreeNode *node) {
 MCTSTreeNode* MCTSTree::randomChoice(vector<MCTSTreeNode*> nodes) {
     int idx = rand() % (nodes.size());
     return nodes[idx];
+}
+
+
+
+void MCTSTree::updateState(MCTSTreeNode *node) {
+    if (++(node->visitedChildrenCnt) == node->children.size())
+        node->isFullyExpanded = true;
 }

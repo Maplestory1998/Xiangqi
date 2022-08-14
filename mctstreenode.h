@@ -15,11 +15,12 @@ class MCTSTreeNode
 {
 public:
     MCTSTreeNode(Board *_board, PIECE_COLOR color, ChessMove *move, MCTSTreeNode *parent = nullptr);
+    ~MCTSTreeNode();
 
+
+public:
     //是红色还是黑子走棋
     PIECE_COLOR currentColor;
-    //赢家
-    PIECE_COLOR winner;
     //是否是终点
     bool isTerminal;
     //是否被完全扩展
@@ -35,7 +36,7 @@ public:
     //子节点
     vector<MCTSTreeNode*> children;
 
-    int VisitedChildrenCnt;
+    int visitedChildrenCnt;
 
     void isEnd();
 };

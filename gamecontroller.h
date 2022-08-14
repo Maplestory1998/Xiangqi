@@ -38,6 +38,8 @@ public:
     void setChosePos(int r, int c) {m_chosePos = {r, c};}
     void setCurPos(int r, int c) { m_curPos = {r, c};}
 
+    void runAi(PIECE_COLOR _aiColor);
+
 private:
 
     Board *m_board;

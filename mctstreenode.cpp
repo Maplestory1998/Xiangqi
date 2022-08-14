@@ -14,6 +14,14 @@ MCTSTreeNode::MCTSTreeNode(Board* _board, PIECE_COLOR color, ChessMove *move, MC
     isEnd();
 }
 
+MCTSTreeNode::~MCTSTreeNode() {
+    delete board;
+    for (auto child : children) {
+        delete child;
+        child = nullptr;
+    }
+    children.clear();
+}
 
 
 void MCTSTreeNode::isEnd()

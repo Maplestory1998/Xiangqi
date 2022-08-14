@@ -15,6 +15,7 @@ public:
     Ai& operator=(const Ai &ai) = delete;
     ~Ai();
 
+    void run(PIECE_COLOR _aiColor);
 
 public:
     Board *m_board;

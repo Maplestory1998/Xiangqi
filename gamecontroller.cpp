@@ -16,6 +16,13 @@ GameController::~GameController()
     }
 }
 
+void GameController::runAi(PIECE_COLOR _aiColor) {
+    ai->run(_aiColor);
+    m_gameState = WAIT_PLAYER_CHOOSE_PIECE;
+    m_currentPlayer = m_currentPlayer == RED? BLACK : RED;
+}
+
+
 /**
  * @brief Game Controller, called when the player choose piece
  * 

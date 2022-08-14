@@ -7,19 +7,12 @@
 class MCTSTree
 {
 public:
-    //根节点
-    MCTSTreeNode *root;
-
-    //ai的颜色
-    PIECE_COLOR aiColor;
 
     MCTSTree(Board *board, PIECE_COLOR _color);
-
+    ~MCTSTree();
 
     MCTSTreeNode* mctsSearch();
-
     MCTSTreeNode* bestChild(MCTSTreeNode *node);
-
 
     //产生子节点
     void generateChildren(MCTSTreeNode *node);
@@ -38,6 +31,15 @@ public:
     int rollout(MCTSTreeNode *node);
 
     MCTSTreeNode *rolloutPolicy(MCTSTreeNode *node);
+
+    void updateState(MCTSTreeNode *node);
+
+public:
+    //根节点
+    MCTSTreeNode *root;
+
+    //ai的颜色
+    PIECE_COLOR aiColor;
 };
 
 #endif // MCTSTREE_H
