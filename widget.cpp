@@ -1,10 +1,15 @@
 #include "widget.h"
 #include "ui_widget.h"
 #include "ai.h"
+#include "aithread.h"
 #include <QPainter>
 #include <QDebug>
 #include <QDesktopWidget>
 #include <windows.h>
+#include <thread>
+#include <mutex>
+
+std::mutex mtx;
 
 Widget::Widget(QWidget *parent, GAME_MODE mode)
     : QWidget(parent),
@@ -40,6 +45,7 @@ Widget::~Widget()
 
 void Widget::paintEvent(QPaintEvent *event)
 {
+    update();
     Q_UNUSED(event);
 
     //get window info (excluding any window frame)
@@ -137,6 +143,7 @@ void Widget::paintEvent(QPaintEvent *event)
 
 void Widget::mousePressEvent(QMouseEvent *event)
 {
+    mtx.lock();
     if(event->button() != Qt::LeftButton)
         return ;
 
@@ -159,9 +166,16 @@ void Widget::mousePressEvent(QMouseEvent *event)
 
     if(game_mode == PVE && currentState == WAIT_AI_MOVE) {
         m_gameController->runAi(BLACK);
-        update();
+       qDebug()<<"start thread";
+//       update();
+
+//        std::thread aiThread(runAiThread, std::ref(*m_gameController), BLACK);
+//        aiThread.join();
     }
+    mtx.unlock();
 }
+
+
 
 // draw "#" on board.  tag: 1- left, 2- right, 3-full
 void Widget::drawBoard2(QPainter &painter, int r, int c, int tag)

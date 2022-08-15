@@ -14,7 +14,7 @@ void Ai::run(PIECE_COLOR _aiColor) {
     tree = new MCTSTree(m_board, _aiColor);
 
     MCTSTreeNode* node = tree->mctsSearch();
-    *m_board = *(node->board);
+    *m_board = node->board;
     for (int i = 0; i < 32; ++i) {
         m_board->getPiece(i).setBoard(&g_board);
     }

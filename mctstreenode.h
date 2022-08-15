@@ -33,7 +33,7 @@ public:
     //Ai获胜的次数
     int numAiWin;
     //当前棋局
-    Board *board;
+    Board board;
     //子节点
     vector<MCTSTreeNode*> children;
 

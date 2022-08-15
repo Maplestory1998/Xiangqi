@@ -17,6 +17,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     ai.cpp \
+    aithread.cpp \
     board.cpp \
     dialog.cpp \
     evaluation.cpp \
@@ -30,6 +31,7 @@ SOURCES += \
 
 HEADERS += \
     ai.h \
+    aithread.h \
     board.h \
     dialog.h \
     evaluation.h \

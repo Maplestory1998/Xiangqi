@@ -3,6 +3,7 @@
 #include <QDebug>
 #include <piece.h>
 #include "evaluation.h"
+#include <QApplication>
 
 
 
@@ -17,26 +18,22 @@ MCTSTree::~MCTSTree() {
 
 MCTSTreeNode* MCTSTree::mctsSearch()
 {
-    time_t begin = clock();
-    time_t end = clock();
-//    while(difftime(end, begin) <= 1) {
-        end = clock();
+    time_t begin = time(nullptr);
+    time_t end = time(nullptr);
+    for (int i = 0;i < 40; ++i) {
+//    while(difftime(end, begin) <= 100) {
+        QApplication::processEvents();
+        end = time(nullptr);
         MCTSTreeNode* leaf = traverse(root);
+        if (leaf == nullptr) {
+            continue;
+        }
         int reward = rollout(leaf);
         backpropogate(leaf, reward);
 //    }
+    }
 
     MCTSTreeNode *res = bestChild(root);
-    if (res == leaf)
-        qDebug()<<"truetrue";
-    else qDebug()<<"falsefalse";
-    for (int i = 0; i < 10; ++i) {
-        qDebug()<<"----------------";
-        for (int j = 0; j < 9; ++j) {
-            qDebug()<<res->board->getPieceType(i, j);
-        }
-
-    }
     return res;
 }
 
@@ -45,13 +42,14 @@ int MCTSTree::rollout(MCTSTreeNode *node)
 {
     int layer = 3;
     while(!node->isTerminal && layer > 0) {
+        QApplication::processEvents();
         node = rolloutPolicy(node);
         --layer;
     }
     if (node->isTerminal)
         return node->winner == aiColor? 1 : 0;
 
-    PIECE_COLOR color = evalutationFunction(node->board);
+    PIECE_COLOR color = evalutationFunction(&node->board);
     return color == aiColor? 1 : 0;
 }
 
@@ -61,16 +59,17 @@ MCTSTreeNode *MCTSTree::rolloutPolicy(MCTSTreeNode *node)
     vector<ChessMove> move;
     while (move.size() == 0) {
         int idx = rand() % 32;
-        while (node->board->getPiece(idx).isExist() == false || node->board->getPiece(idx).getColor() != node->currentColor) {
+        while (node->board.getPiece(idx).isExist() == false || node->board.getPiece(idx).getColor() != node->currentColor) {
             idx = rand() % 32;
+            QApplication::processEvents();
         }
 
-        Piece p = node->board->getPiece(idx);
-        p.allMoveMethod(p.getPos(), node->currentColor, node->board, move);
+        Piece p = node->board.getPiece(idx);
+        p.allMoveMethod(p.getPos(), node->currentColor, &node->board, move);
     }
 
     int randIdx = rand()% move.size();
-    MCTSTreeNode *next = new MCTSTreeNode(node->board, node->currentColor == BLACK? RED : BLACK, &move[randIdx], node);
+    MCTSTreeNode *next = new MCTSTreeNode(&node->board, node->currentColor == BLACK? RED : BLACK, &move[randIdx], node);
     node->children.push_back(next);
 
     return next;
@@ -79,11 +78,17 @@ MCTSTreeNode *MCTSTree::rolloutPolicy(MCTSTreeNode *node)
 
 MCTSTreeNode* MCTSTree::traverse(MCTSTreeNode* node)
 {
-    while(node->isFullyExpanded)
+    while(node->isFullyExpanded) {
         node = bestChild(node);
+        QApplication::processEvents();
+    }
     if(node->isTerminal)
         return node;
-    return pickUnvisited(node);
+    MCTSTreeNode *res = pickUnvisited(node);
+    if (res == nullptr) {
+        backpropogate(node, 1);
+    }
+    return res;
 }
 
 MCTSTreeNode* MCTSTree::pickUnvisited(MCTSTreeNode *node)
@@ -94,6 +99,8 @@ MCTSTreeNode* MCTSTree::pickUnvisited(MCTSTreeNode *node)
         MCTSTreeNode *res = randomChoice(node->children);
         return res;
     }
+
+    QApplication::processEvents();
     vector<MCTSTreeNode*> choices;
     for (auto child: node->children ) {
         if(child->numVisited == 0)
@@ -128,15 +135,6 @@ MCTSTreeNode* MCTSTree::bestChild(MCTSTreeNode *node) {
         }
     }
     qDebug()<<"bestNode's size: "<<bestNodes.size();
-    if(bestNodes.size() == 1) {
-        qDebug()<<"sb";
-        for (int i = 0; i < 10; ++i) {
-            for (int j = 0; j < 9; ++j) {
-                qDebug()<<bestNodes[0]->board->getPieceType(i, j);
-            }
-            qDebug()<<"----------------------------";
-        }
-    }
     return randomChoice(bestNodes);
 }
 
@@ -146,6 +144,7 @@ void MCTSTree::backpropogate(MCTSTreeNode* node, int reward) {
         delete child;
         child = nullptr;
     }
+
     node->children.clear();
     updateState(node->parent);
     
@@ -160,14 +159,14 @@ void MCTSTree::backpropogate(MCTSTreeNode* node, int reward) {
 void MCTSTree::generateChildren(MCTSTreeNode *node) {
     vector<ChessMove> chessMove;
     for (int i = 0; i < 32; ++i) {
-        Piece p = node->board->getPiece(i);
+        Piece p = node->board.getPiece(i);
         if (p.isExist() && p.getColor() == aiColor) {
-            p.allMoveMethod(p.getPos(), p.getColor(), node->board, chessMove);
+            p.allMoveMethod(p.getPos(), p.getColor(), &node->board, chessMove);
         }
     }
 
     for(auto i : chessMove) {
-        MCTSTreeNode *child = new MCTSTreeNode(node->board, node->currentColor == RED? BLACK: RED, &i, node);
+        MCTSTreeNode *child = new MCTSTreeNode(&node->board, node->currentColor == RED? BLACK: RED, &i, node);
         node->children.push_back(child);
     }
 }
@@ -175,11 +174,11 @@ void MCTSTree::generateChildren(MCTSTreeNode *node) {
 
 
 MCTSTreeNode* MCTSTree::randomChoice(vector<MCTSTreeNode*> &nodes) {
+    if (nodes.size() == 0)
+           return nullptr;
     int idx = rand() % (nodes.size());
     return nodes[idx];
 }
-
-
 
 void MCTSTree::updateState(MCTSTreeNode *node) {
     if (++(node->visitedChildrenCnt) == node->children.size())
