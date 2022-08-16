@@ -143,10 +143,13 @@ void Widget::paintEvent(QPaintEvent *event)
 
 void Widget::mousePressEvent(QMouseEvent *event)
 {
-    mtx.lock();
+    mtx.try_lock();
     if(event->button() != Qt::LeftButton)
         return ;
-
+    if (m_gameController->getGameState() == WAIT_AI_MOVE){
+        mtx.unlock();
+        return ;
+    }
 
     int posX = event->pos().x() - m_gap / 2;
     int posY = event->pos().y() - m_gap / 2;
@@ -165,12 +168,11 @@ void Widget::mousePressEvent(QMouseEvent *event)
         showGameResult(currentState);
 
     if(game_mode == PVE && currentState == WAIT_AI_MOVE) {
-        m_gameController->runAi(BLACK);
-       qDebug()<<"start thread";
-//       update();
 
-//        std::thread aiThread(runAiThread, std::ref(*m_gameController), BLACK);
-//        aiThread.join();
+       update();
+
+       std::thread aiThread(runAiThread, std::ref(*m_gameController), BLACK);
+       aiThread.detach();
     }
     mtx.unlock();
 }

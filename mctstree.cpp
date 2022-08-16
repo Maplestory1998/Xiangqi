@@ -20,9 +20,8 @@ MCTSTreeNode* MCTSTree::mctsSearch()
 {
     time_t begin = time(nullptr);
     time_t end = time(nullptr);
-    for (int i = 0;i < 40; ++i) {
+    for (int i = 0;i < 500000; ++i) {
 //    while(difftime(end, begin) <= 100) {
-        QApplication::processEvents();
         end = time(nullptr);
         MCTSTreeNode* leaf = traverse(root);
         if (leaf == nullptr) {
@@ -42,7 +41,6 @@ int MCTSTree::rollout(MCTSTreeNode *node)
 {
     int layer = 3;
     while(!node->isTerminal && layer > 0) {
-        QApplication::processEvents();
         node = rolloutPolicy(node);
         --layer;
     }
@@ -61,7 +59,6 @@ MCTSTreeNode *MCTSTree::rolloutPolicy(MCTSTreeNode *node)
         int idx = rand() % 32;
         while (node->board.getPiece(idx).isExist() == false || node->board.getPiece(idx).getColor() != node->currentColor) {
             idx = rand() % 32;
-            QApplication::processEvents();
         }
 
         Piece p = node->board.getPiece(idx);
@@ -80,7 +77,6 @@ MCTSTreeNode* MCTSTree::traverse(MCTSTreeNode* node)
 {
     while(node->isFullyExpanded) {
         node = bestChild(node);
-        QApplication::processEvents();
     }
     if(node->isTerminal)
         return node;
@@ -95,12 +91,10 @@ MCTSTreeNode* MCTSTree::pickUnvisited(MCTSTreeNode *node)
 {
     if (node->numVisited == 0) {
         generateChildren(node);
-        qDebug()<<node->children.size();
         MCTSTreeNode *res = randomChoice(node->children);
         return res;
     }
 
-    QApplication::processEvents();
     vector<MCTSTreeNode*> choices;
     for (auto child: node->children ) {
         if(child->numVisited == 0)
@@ -114,7 +108,6 @@ MCTSTreeNode* MCTSTree::pickUnvisited(MCTSTreeNode *node)
 MCTSTreeNode* MCTSTree::bestChild(MCTSTreeNode *node) {
     double bestValue = 0.0;
     vector<MCTSTreeNode*> bestNodes;
-    qDebug()<<"children's size"<<node->children.size();
     for (MCTSTreeNode *child  : node->children) {
         if (child->numVisited == 0)
             continue;
@@ -134,7 +127,6 @@ MCTSTreeNode* MCTSTree::bestChild(MCTSTreeNode *node) {
             bestNodes.push_back(child);
         }
     }
-    qDebug()<<"bestNode's size: "<<bestNodes.size();
     return randomChoice(bestNodes);
 }
 

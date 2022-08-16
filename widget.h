@@ -7,10 +7,12 @@
 #include "board.h"
 #include "gamecontroller.h"
 #include "msgdialog.h"
+#include <mutex>
 
 #define WINDOW_WIDTH_DEFAULT    1920
 #define WINDOW_HEIGHT_DEFAULT   1080
 
+extern std::mutex mtx;
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class Widget; }
