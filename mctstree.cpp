@@ -20,7 +20,7 @@ MCTSTreeNode* MCTSTree::mctsSearch()
 {
     time_t begin = time(nullptr);
     time_t end = time(nullptr);
-    for (int i = 0;i < 500000; ++i) {
+    for (int i = 0;i < 5000000; ++i) {
 //    while(difftime(end, begin) <= 100) {
         end = time(nullptr);
         MCTSTreeNode* leaf = traverse(root);
