@@ -28,23 +28,19 @@ Widget::Widget(QWidget *parent, GAME_MODE mode)
     loadImages();
 }
 
-void Widget::loadImages()
-{
-    for(int i = 0; i < 14; ++i)
-    {
+void Widget::loadImages() {
+    for(int i = 0; i < 14; ++i) {
         m_pieceImages[i].load(g_imagesSources[i]);
     }
 
 }
 
-Widget::~Widget()
-{
+Widget::~Widget() {
     delete ui;
     delete m_gameController;
 }
 
-void Widget::paintEvent(QPaintEvent *event)
-{
+void Widget::paintEvent(QPaintEvent *event) {
     update();
     Q_UNUSED(event);
 
@@ -73,15 +69,13 @@ void Widget::paintEvent(QPaintEvent *event)
     m_topLeft = QPoint(m_gap / 2 * scaleY + 50,  m_gap / 2 * scaleY);
 
     m_step = size / 10;
-    for(int i = 0; i < 10; ++i)
-    {
+    for(int i = 0; i < 10; ++i) {
         pp.drawLine(m_topLeft.x(), m_topLeft.y() +  m_step * i, m_topLeft.x() + m_step * 8, m_topLeft.y() + m_step * i);
     }
 
     pp.drawLine(m_topLeft.x(), m_topLeft.y() , m_topLeft.x(), m_topLeft.y() + m_step * 9);
     pp.drawLine(m_topLeft.x() + 8 * m_step, m_topLeft.y(), m_topLeft.x() + 8 * m_step, m_topLeft.y() + m_step * 9);
-    for(int i = 1; i < 8; ++i)
-    {
+    for(int i = 1; i < 8; ++i) {
         pp.drawLine(m_topLeft.x() + m_step * i, m_topLeft.y(), m_topLeft.x() + m_step * i,  m_topLeft.y() + m_step * 4);
         pp.drawLine(m_topLeft.x() + m_step * i, m_topLeft.y() + 9 * m_step, m_topLeft.x() + m_step * i, m_topLeft.y() + m_step * 5);
     }
@@ -99,8 +93,7 @@ void Widget::paintEvent(QPaintEvent *event)
     drawBoard2(pp, 6, 0, 2);
     drawBoard2(pp, 6, 8, 1);
 
-    for(int i = 2; i < 8; i += 2)
-    {
+    for(int i = 2; i < 8; i += 2) {
         drawBoard2(pp, 3, i , 3);
         drawBoard2(pp, 6, i , 3);
     }
@@ -114,13 +107,10 @@ void Widget::paintEvent(QPaintEvent *event)
     //draw pieces
     m_chessSize = m_step;
 
-    for(int r = 0; r < 10; ++r)
-    {
-        for(int c = 0; c < 9; ++c)
-        {
+    for(int r = 0; r < 10; ++r) {
+        for(int c = 0; c < 9; ++c) {
             PIECE_TYPE type = m_gameController->getBoard()->getPieceType(r, c);
-            if(type != NO_PIECE)
-            {
+            if(type != NO_PIECE) {
                 pp.drawPixmap(m_topLeft.x() + m_step * c - m_chessSize / 2
                               , m_topLeft.y() + m_step * r - m_chessSize / 2,
                               m_chessSize , m_chessSize , m_pieceImages[type]);
@@ -131,18 +121,15 @@ void Widget::paintEvent(QPaintEvent *event)
 
     //等待玩家移动
     //Displaying Auxiliary Information
-    if(m_gameController->getGameState() == WAIT_PLAYER_MOVE)
-    {
+    if(m_gameController->getGameState() == WAIT_PLAYER_MOVE) {
         drawBoard3(pp, pen, m_gameController->getChosePos().first, m_gameController->getChosePos().second);
-//        qDebug()<<"Player Choose:"<<m_gameController->getChosePos().first<<m_gameController->getChosePos().second;
     }
 
     painter.drawPixmap(m_gap / 2, m_gap / 2, pix);
 }
 
 
-void Widget::mousePressEvent(QMouseEvent *event)
-{
+void Widget::mousePressEvent(QMouseEvent *event) {
     mtx.try_lock();
     if(event->button() != Qt::LeftButton)
         return ;
@@ -157,10 +144,7 @@ void Widget::mousePressEvent(QMouseEvent *event)
     int cIdx = static_cast<float>(posX - m_topLeft.x()) / static_cast<float>(m_step) + 0.5f;
     int rIdx = static_cast<float>(posY - m_topLeft.y()) / static_cast<float>(m_step) + 0.5f;
 
-    //
     PIECE_TYPE type = m_gameController->getBoard()->getPieceType(rIdx, cIdx);
-    qDebug()<<"type:"<<type;
-
     GAME_STATE currentState = m_gameController->controller(rIdx, cIdx, game_mode);
 
     update();
@@ -168,9 +152,7 @@ void Widget::mousePressEvent(QMouseEvent *event)
         showGameResult(currentState);
 
     if(game_mode == PVE && currentState == WAIT_AI_MOVE) {
-
        update();
-
        std::thread aiThread(runAiThread, std::ref(*m_gameController), BLACK);
        aiThread.detach();
     }
@@ -178,8 +160,10 @@ void Widget::mousePressEvent(QMouseEvent *event)
 }
 
 
-
-// draw "#" on board.  tag: 1- left, 2- right, 3-full
+/**
+ * @brief draw "#" on board.  
+ * @param tag 1- left, 2- right, 3-full
+ */
 void Widget::drawBoard2(QPainter &painter, int r, int c, int tag)
 {
     int gapLine = 5;
@@ -187,8 +171,7 @@ void Widget::drawBoard2(QPainter &painter, int r, int c, int tag)
     int x = m_topLeft.x() + m_step * c;
     int y = m_topLeft.y() + m_step * r;
 
-    if(tag & 0x1)
-    {
+    if(tag & 0x1) {
         //left top
         painter.drawLine(x - gapLine - lineLength,  y - gapLine, x - gapLine, y - gapLine);
         painter.drawLine(x - gapLine, y - gapLine, x - gapLine, y - gapLine - lineLength);
@@ -198,8 +181,7 @@ void Widget::drawBoard2(QPainter &painter, int r, int c, int tag)
         painter.drawLine(x - gapLine, y + gapLine, x - gapLine, y + gapLine + lineLength);
     }
 
-    if(tag & 0x2)
-    {
+    if(tag & 0x2) {
         //right top
         painter.drawLine(x + gapLine, y - gapLine, x + gapLine + lineLength, y - gapLine);
         painter.drawLine(x + gapLine, y - gapLine, x + gapLine, y - gapLine - lineLength);
@@ -210,8 +192,7 @@ void Widget::drawBoard2(QPainter &painter, int r, int c, int tag)
     }
 }
 
-void Widget::drawBoard3(QPainter &pp, QPen &oldPen, int r, int c)
-{
+void Widget::drawBoard3(QPainter &pp, QPen &oldPen, int r, int c) {
     QPen pen;
     pen.setColor(Qt::red);
     pen.setStyle(Qt::SolidLine);
@@ -248,10 +229,7 @@ void Widget::drawBoard3(QPainter &pp, QPen &oldPen, int r, int c)
  * @param gameState 
  */
 void Widget::showGameResult(GAME_STATE gameState){
-    if( RED_WIN == gameState)
-        n = new MsgDialog(this, "Red Player Win!");
-    else
-        n = new MsgDialog(this, "Black Player Win!");
+    n = (RED_WIN == gameState)? new MsgDialog(this, "Red Player Win!") : new MsgDialog(this, "Black Player Win!");
     n->show();
 }
 

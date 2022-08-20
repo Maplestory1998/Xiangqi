@@ -1,15 +1,13 @@
 #include "gamecontroller.h"
 #include "QtDebug"
 
-GameController::GameController(GAME_MODE mode) : m_board (&g_board),  m_gameState(WAIT_PLAYER_CHOOSE_PIECE), m_currentPlayer(RED), ai(nullptr)
-{
+GameController::GameController(GAME_MODE mode) : m_board (&g_board),  m_gameState(WAIT_PLAYER_CHOOSE_PIECE), m_currentPlayer(RED), ai(nullptr) {
     if (mode == PVE) {
         ai = new Ai(m_board, BLACK);
     }
 }
 
-GameController::~GameController()
-{
+GameController::~GameController() {
     delete ai;
     if (m_board != &g_board) {
         delete m_board;
@@ -20,7 +18,6 @@ void GameController::runAi(PIECE_COLOR _aiColor) {
     ai->run(_aiColor);
     m_gameState = WAIT_PLAYER_CHOOSE_PIECE;
     m_currentPlayer = m_currentPlayer == RED? BLACK : RED;
-    qDebug()<<"end thread";
 }
 
 
@@ -32,11 +29,8 @@ void GameController::runAi(PIECE_COLOR _aiColor) {
  * @param gameMode 
  * @return GAME_STATE 
  */
-GAME_STATE GameController::controller(int _row, int _col, GAME_MODE gameMode)
-{
-
-    if(m_gameState == WAIT_PLAYER_CHOOSE_PIECE)
-    {
+GAME_STATE GameController::controller(int _row, int _col, GAME_MODE gameMode) {
+    if(m_gameState == WAIT_PLAYER_CHOOSE_PIECE) {
         if (_row < 0 || _row > 9 || _col < 0 || _col > 8 ||
                 m_board->getPieceType(_row, _col) == NO_PIECE ||
                 m_board->getPieceColor(_row, _col) != m_currentPlayer)
@@ -45,10 +39,7 @@ GAME_STATE GameController::controller(int _row, int _col, GAME_MODE gameMode)
         m_gameState = WAIT_PLAYER_MOVE;
         setChosePos(_row, _col);
         return m_gameState;
-    }
-
-    else if(m_gameState ==  WAIT_PLAYER_MOVE)
-    {
+    } else if(m_gameState ==  WAIT_PLAYER_MOVE) {
         if (_row < 0 || _row > 9 || _col < 0 || _col > 8) {
             m_gameState = WAIT_PLAYER_CHOOSE_PIECE;
             return m_gameState;
@@ -57,23 +48,18 @@ GAME_STATE GameController::controller(int _row, int _col, GAME_MODE gameMode)
         setCurPos(_row, _col);
         bool res = getBoard()->canMove(getChosePos(), getCurPos());
 
-        if(res == true)
-        {
+        if(res == true) {
             m_currentPlayer = m_currentPlayer == RED? BLACK : RED;
             getBoard()->movePiece(getChosePos(), getCurPos());
             m_gameState = gameMode == PVP ?WAIT_PLAYER_CHOOSE_PIECE: WAIT_AI_MOVE;
         }
-
-
     }
     //判断游戏是否结束
     if(m_board->getPiece(4).isExist() == false) {
-         qDebug()<<"Red win";
          m_gameState = RED_WIN;
     }
 
     if(m_board->getPiece(20).isExist() == false) {
-        qDebug()<<"Black win";
         m_gameState = BLACK_WIN;
     }
 

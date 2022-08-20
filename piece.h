@@ -11,10 +11,9 @@ extern Board g_board;
 
 /**
  * @brief move method
- * 
  */
 struct ChessMove{
-    ChessMove(pair<int, int> _from, pair<int, int> _to):
+    ChessMove(const pair<int, int> &_from, const pair<int, int> &_to):
          from(_from), to(_to){
     }
     pair<int, int> from;
@@ -51,16 +50,29 @@ enum PIECE_COLOR
 
 /**
  * @brief Determine whether the piece can be moved from oldP to newP
- * 
+ * @param oldP Original position of the piece
+ * @param newP Target position of the piece
+ * @param color Piece color
+ * @param board Pointer that point to the board
  */
 typedef bool (*callback)(const pair<int, int> &oldP, const pair<int, int> &newP, PIECE_COLOR color, Board *board);
 
 /**
  * @brief Get all moves of the piece
- * 
+ * @param oldP Original position of the piece
+ * @param color Piece color
+ * @param board Pointer that point to the board
+ * @param chessMove Store the move
  */
 typedef void (*callback2)(const pair<int,int> &oldP, PIECE_COLOR color, Board* board, vector<ChessMove>& chessMove);
 
+
+/**
+ * @brief Get the number of moves of the piece
+ * @param oldP Original position of the piece
+ * @param color Piece color
+ * @param board Pointer that point to the board
+ */
 typedef int (*callback3)(const pair<int,int> &oldP, PIECE_COLOR color, Board *board);
 
 
@@ -87,8 +99,7 @@ extern int generalPosValue[10][9];
 extern int advisorPosValue[10][9];
 extern int elephantPosValue[10][9];
 
-class Piece
-{
+class Piece {
 public:
     Piece();
     Piece(const Piece &piece);
@@ -96,44 +107,62 @@ public:
     ~Piece();
 
 
-    PIECE_COLOR getColor(){
-        if (m_type == NO_PIECE)
+    inline PIECE_COLOR getColor() {
+        if (m_type == NO_PIECE) {
             return NO_COLOR;
-        PIECE_COLOR color = m_type <= BLACK_SOLDIER? BLACK : RED;
-        return color;
+        }
+        return m_type <= BLACK_SOLDIER? BLACK : RED;
     }
-    PIECE_TYPE getType(){return m_type;}
-    void Init(int id);
 
-    bool isExist(){return m_exist;}
-    void destroyPiece(){
+    inline PIECE_TYPE getType() {
+        return m_type;
+    }
+
+    inline bool isExist() {
+        return m_exist;
+    }
+
+    inline void destroyPiece(){
         m_exist = false;
         m_type = NO_PIECE;
     }
 
+        inline pair<int, int> getPos() {
+        return pos;
+    }
+
+    inline void setPos(int row, int col) {
+        pos.first = row;
+        pos.second = col;
+    }
+
+    inline void setPos(const pair<int,int> &_pos) {
+        pos = _pos;
+    }
+
+    inline void setBoard(Board *_b) {
+        m_board = _b;
+    }
+
+    inline int getValue() {
+        return value;
+    }
+
+    inline int getFlexibilityFactor() {
+        return flexibilityFactor;
+    }
+
+    inline int getMaxMoveMethod() {
+        return maxMoveMethod;
+    }
+
+    void Init(int id);
+
+public:
     callback canPieceMove;
     callback2 allMoveMethod;
     callback3 getMoveMethodCnt;
     int (*posEvalutaion)[9];
-
-    pair<int, int> getPos() {
-        return pos;
-    }
-    void setPos(int row, int col) {
-        pos.first = row;
-        pos.second = col;
-    }
-    void setPos(const pair<int,int> &_pos) {
-        pos = _pos;
-    }
-
-    void setBoard(Board *_b) {
-        m_board = _b;
-    }
-
-    int getValue(){return value;}
-    int getFlexibilityFactor(){return flexibilityFactor;}
-    int getMaxMoveMethod(){return maxMoveMethod;}
 
 public:
     Board *m_board;

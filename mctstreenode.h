@@ -17,7 +17,6 @@ public:
     MCTSTreeNode(Board *_board, PIECE_COLOR color, ChessMove *move, MCTSTreeNode *parent = nullptr);
     ~MCTSTreeNode();
 
-
 public:
     //是红色还是黑子走棋
     PIECE_COLOR currentColor;

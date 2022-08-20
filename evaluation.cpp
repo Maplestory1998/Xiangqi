@@ -1,8 +1,12 @@
 #include <board.h>
 
-
+// Piece Fight Factor
 static const int pieceFightFactor = 1;
+
+//Piece Position Factor
 static const int piecePosFactor = 1;
+
+//Piece Flexibility Factor
 static const int pieceFlexibilityFactor = 8;
 
 int chariotPosValue[10][9] = {
@@ -100,10 +104,7 @@ int getPiecePosValue(Piece &p) {
     int r= p.getPos().first;
     int c = p.getPos().second;
     PIECE_COLOR color = p.getColor();
-    if (color == RED)
-        return p.posEvalutaion[r][c];
-    else
-        return p.posEvalutaion[9 - r][c];
+    return color == RED? p.posEvalutaion[r][c] : p.posEvalutaion[9 - r][c];
 }
 
 PIECE_COLOR evalutationFunction(Board *board) {
@@ -111,19 +112,21 @@ PIECE_COLOR evalutationFunction(Board *board) {
     int redTotalValue = 0;
 
     for (int i = 0; i < 32; ++i ){
-       Piece p = board->getPiece(i);
-       if (p.isExist()) {
-           int pieceTotalValue = getPiecePosValue(p);
-//           int piecePosValue = getPiecePosValue(p);
-           //int pieceFightValue = p.getValue();
-           //int pieceFlexibilityValue = p.getFlexibilityFactor() * p.getMoveMethodCnt(p.getPos(), p.getColor(), board)
-            //            / p.getMaxMoveMethod();
-           //int pieceTotalValue = pieceFightFactor * pieceFightValue + piecePosFactor * piecePosValue
-                  //              +   pieceFlexibilityFactor * pieceFlexibilityValue;
-           if (p.getColor() == RED)
-               redTotalValue += pieceTotalValue;
-           else blackTotalValue = pieceTotalValue;
-       }
+        Piece p = board->getPiece(i);
+        if (p.isExist()) {
+            int pieceTotalValue = getPiecePosValue(p);
+            int piecePosValue = getPiecePosValue(p);
+            int pieceFightValue = p.getValue();
+            int pieceFlexibilityValue = p.getFlexibilityFactor() * p.getMoveMethodCnt(p.getPos(), p.getColor(), board)
+                        / p.getMaxMoveMethod();
+            int pieceTotalValue = pieceFightFactor * pieceFightValue + piecePosFactor * piecePosValue
+                               +   pieceFlexibilityFactor * pieceFlexibilityValue;
+            if (p.getColor() == RED) {
+               redTotalValue += pieceTotalValue; 
+            } else {
+                blackTotalValue = pieceTotalValue;
+            }
+        }
     }
 
     return blackTotalValue >= redTotalValue ? BLACK: RED;

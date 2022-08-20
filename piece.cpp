@@ -2,7 +2,7 @@
 #include "board.h"
 #include <QDebug>
 
-//image Source
+//Piece image Source
 QString g_imagesSources[14] = {
     "../images/BLACK_GENERAL.gif",
     "../images/BLACK_ADVISOR.gif",
@@ -23,50 +23,48 @@ QString g_imagesSources[14] = {
 
 //The information for board pieces initial
 InitialPos g_initialPos[32] = {
-    {0, 0,  BLACK_CHARIOT,  canChariotMove,     getChariotMove,     getChariotMoveMethodsCnt,100, 1, chariotPosValue,   17},
-    {0, 1,  BLACK_HORSE,    canHorseMove,       getHorseMove,       getHorseMoveMethodsCnt,100, 3, horsePosValue,   8},
-    {0, 2,  BLACK_ELEPHANT, canElephantMove,    getElephantMove,    getElephantMoveMethodsCnt , 100, 1, elephantPosValue,   4},
-    {0, 3,  BLACK_ADVISOR,  canAdvisorMove,     getAdvisorMove,     getAdvisorMoveMethodsCnt ,100, 1, advisorPosValue,  4},
-    {0, 4,  BLACK_GENERAL,  canGeneralMove,     getGeneralMove,     getGeneralMoveMethodsCnt , 100, 1, generalPosValue, 4},
-    {0, 5,  BLACK_ADVISOR,  canAdvisorMove,     getAdvisorMove,     getAdvisorMoveMethodsCnt ,100, 1, advisorPosValue,  4},
-    {0, 6,  BLACK_ELEPHANT, canElephantMove,    getElephantMove,    getElephantMoveMethodsCnt ,100, 1, elephantPosValue,    4},
-    {0, 7,  BLACK_HORSE,    canHorseMove,       getHorseMove,       getHorseMoveMethodsCnt, 100, 1, horsePosValue,  8},
-    {0, 8,  BLACK_CHARIOT,  canChariotMove,     getChariotMove,     getChariotMoveMethodsCnt,100 , 1, chariotPosValue,  17},
-    {2, 1,  BLACK_CANNON,   canCannoMove,       getCannoMove,       getCannoMoveMethodsCnt ,100, 1, cannoPosValue,  17},
-    {2, 7,  BLACK_CANNON,   canCannoMove,       getCannoMove,       getCannoMoveMethodsCnt,100, 1, cannoPosValue,   17},
-    {3, 0,  BLACK_SOLDIER,  canSoldierMove,     getSoldierMove,     getSoldierMoveMethodsCnt, 100, 1, soldierPosValue,  3},
-    {3, 2,  BLACK_SOLDIER,  canSoldierMove,     getSoldierMove,     getSoldierMoveMethodsCnt ,100, 1, soldierPosValue,  3},
-    {3, 4,  BLACK_SOLDIER,  canSoldierMove,     getSoldierMove,     getSoldierMoveMethodsCnt ,100, 1, soldierPosValue,  3},
-    {3, 6,  BLACK_SOLDIER,  canSoldierMove,     getSoldierMove,     getSoldierMoveMethodsCnt ,100, 1, soldierPosValue,  3},
-    {3, 8,  BLACK_SOLDIER,  canSoldierMove,     getSoldierMove,     getSoldierMoveMethodsCnt ,100, 1, soldierPosValue,  3},
+    {0, 0,  BLACK_CHARIOT,  canChariotMove,     getChariotMove,     getChariotMoveMethodsCnt,   100, 1, chariotPosValue,   17},
+    {0, 1,  BLACK_HORSE,    canHorseMove,       getHorseMove,       getHorseMoveMethodsCnt,     100, 3, horsePosValue,   8},
+    {0, 2,  BLACK_ELEPHANT, canElephantMove,    getElephantMove,    getElephantMoveMethodsCnt,  100, 1, elephantPosValue,   4},
+    {0, 3,  BLACK_ADVISOR,  canAdvisorMove,     getAdvisorMove,     getAdvisorMoveMethodsCnt,   100, 1, advisorPosValue,  4},
+    {0, 4,  BLACK_GENERAL,  canGeneralMove,     getGeneralMove,     getGeneralMoveMethodsCnt,   100, 1, generalPosValue, 4},
+    {0, 5,  BLACK_ADVISOR,  canAdvisorMove,     getAdvisorMove,     getAdvisorMoveMethodsCnt,   100, 1, advisorPosValue,  4},
+    {0, 6,  BLACK_ELEPHANT, canElephantMove,    getElephantMove,    getElephantMoveMethodsCnt,  100, 1, elephantPosValue,    4},
+    {0, 7,  BLACK_HORSE,    canHorseMove,       getHorseMove,       getHorseMoveMethodsCnt,     100, 1, horsePosValue,  8},
+    {0, 8,  BLACK_CHARIOT,  canChariotMove,     getChariotMove,     getChariotMoveMethodsCnt,   100, 1, chariotPosValue,  17},
+    {2, 1,  BLACK_CANNON,   canCannoMove,       getCannoMove,       getCannoMoveMethodsCnt,     100, 1, cannoPosValue,  17},
+    {2, 7,  BLACK_CANNON,   canCannoMove,       getCannoMove,       getCannoMoveMethodsCnt,     100, 1, cannoPosValue,   17},
+    {3, 0,  BLACK_SOLDIER,  canSoldierMove,     getSoldierMove,     getSoldierMoveMethodsCnt,   100, 1, soldierPosValue,  3},
+    {3, 2,  BLACK_SOLDIER,  canSoldierMove,     getSoldierMove,     getSoldierMoveMethodsCnt,   100, 1, soldierPosValue,  3},
+    {3, 4,  BLACK_SOLDIER,  canSoldierMove,     getSoldierMove,     getSoldierMoveMethodsCnt,   100, 1, soldierPosValue,  3},
+    {3, 6,  BLACK_SOLDIER,  canSoldierMove,     getSoldierMove,     getSoldierMoveMethodsCnt,   100, 1, soldierPosValue,  3},
+    {3, 8,  BLACK_SOLDIER,  canSoldierMove,     getSoldierMove,     getSoldierMoveMethodsCnt,   100, 1, soldierPosValue,  3},
 
-    {9, 0,  RED_CHARIOT,    canChariotMove,     getChariotMove,     getChariotMoveMethodsCnt, 100, 1, chariotPosValue,  17},
-    {9, 1,  RED_HORSE,      canHorseMove,       getHorseMove,       getHorseMoveMethodsCnt, 100, 1, horsePosValue,  8},
-    {9, 2,  RED_ELEPHANT,   canElephantMove,    getElephantMove,    getElephantMoveMethodsCnt, 100, 1, elephantPosValue,    4},
-    {9, 3,  RED_ADVISOR,    canAdvisorMove,     getAdvisorMove,     getAdvisorMoveMethodsCnt, 100, 1, advisorPosValue,  4},
-    {9, 4,  RED_GENERAL,    canGeneralMove,     getGeneralMove,     getGeneralMoveMethodsCnt, 100, 1, generalPosValue,  4},
-    {9, 5,  RED_ADVISOR,    canAdvisorMove,     getAdvisorMove,     getAdvisorMoveMethodsCnt, 100, 1, advisorPosValue,  4},
-    {9, 6,  RED_ELEPHANT,   canElephantMove,    getElephantMove,    getElephantMoveMethodsCnt, 100, 1, elephantPosValue,    4},
-    {9, 7,  RED_HORSE,      canHorseMove,       getHorseMove,       getHorseMoveMethodsCnt ,100 , 1, horsePosValue, 8},
-    {9, 8,  RED_CHARIOT,    canChariotMove,     getChariotMove,     getChariotMoveMethodsCnt, 100, 1, chariotPosValue,  17},
-    {7, 1,  RED_CANNON,     canCannoMove,       getCannoMove,       getCannoMoveMethodsCnt ,100, 1, cannoPosValue,  17},
-    {7, 7,  RED_CANNON,     canCannoMove,       getCannoMove,       getCannoMoveMethodsCnt ,100, 1, cannoPosValue,  17},
-    {6, 0,  RED_SOLDIER,    canSoldierMove,     getSoldierMove,     getSoldierMoveMethodsCnt ,100, 1, soldierPosValue,  3},
-    {6, 2,  RED_SOLDIER,    canSoldierMove,     getSoldierMove,     getSoldierMoveMethodsCnt ,100, 1, soldierPosValue,  3},
-    {6, 4,  RED_SOLDIER,    canSoldierMove,     getSoldierMove,     getSoldierMoveMethodsCnt ,100, 1, soldierPosValue,  3},
-    {6, 6,  RED_SOLDIER,    canSoldierMove,     getSoldierMove,     getSoldierMoveMethodsCnt ,100, 1, soldierPosValue,  3},
-    {6, 8,  RED_SOLDIER,    canSoldierMove,     getSoldierMove,     getSoldierMoveMethodsCnt ,100, 1, soldierPosValue,  3},
+    {9, 0,  RED_CHARIOT,    canChariotMove,     getChariotMove,     getChariotMoveMethodsCnt,   100, 1, chariotPosValue,  17},
+    {9, 1,  RED_HORSE,      canHorseMove,       getHorseMove,       getHorseMoveMethodsCnt,     100, 1, horsePosValue,  8},
+    {9, 2,  RED_ELEPHANT,   canElephantMove,    getElephantMove,    getElephantMoveMethodsCnt,  100, 1, elephantPosValue,    4},
+    {9, 3,  RED_ADVISOR,    canAdvisorMove,     getAdvisorMove,     getAdvisorMoveMethodsCnt,   100, 1, advisorPosValue,  4},
+    {9, 4,  RED_GENERAL,    canGeneralMove,     getGeneralMove,     getGeneralMoveMethodsCnt,   100, 1, generalPosValue,  4},
+    {9, 5,  RED_ADVISOR,    canAdvisorMove,     getAdvisorMove,     getAdvisorMoveMethodsCnt,   100, 1, advisorPosValue,  4},
+    {9, 6,  RED_ELEPHANT,   canElephantMove,    getElephantMove,    getElephantMoveMethodsCnt,  100, 1, elephantPosValue,    4},
+    {9, 7,  RED_HORSE,      canHorseMove,       getHorseMove,       getHorseMoveMethodsCnt,     100, 1, horsePosValue, 8},
+    {9, 8,  RED_CHARIOT,    canChariotMove,     getChariotMove,     getChariotMoveMethodsCnt,   100, 1, chariotPosValue,  17},
+    {7, 1,  RED_CANNON,     canCannoMove,       getCannoMove,       getCannoMoveMethodsCnt,     100, 1, cannoPosValue,  17},
+    {7, 7,  RED_CANNON,     canCannoMove,       getCannoMove,       getCannoMoveMethodsCnt,     100, 1, cannoPosValue,  17},
+    {6, 0,  RED_SOLDIER,    canSoldierMove,     getSoldierMove,     getSoldierMoveMethodsCnt,   100, 1, soldierPosValue,  3},
+    {6, 2,  RED_SOLDIER,    canSoldierMove,     getSoldierMove,     getSoldierMoveMethodsCnt,   100, 1, soldierPosValue,  3},
+    {6, 4,  RED_SOLDIER,    canSoldierMove,     getSoldierMove,     getSoldierMoveMethodsCnt,   100, 1, soldierPosValue,  3},
+    {6, 6,  RED_SOLDIER,    canSoldierMove,     getSoldierMove,     getSoldierMoveMethodsCnt,   100, 1, soldierPosValue,  3},
+    {6, 8,  RED_SOLDIER,    canSoldierMove,     getSoldierMove,     getSoldierMoveMethodsCnt,   100, 1, soldierPosValue,  3},
 };
 
-Piece::Piece() : canPieceMove(nullptr), allMoveMethod(nullptr),m_exist(true) , m_board(&g_board)
-{
+Piece::Piece() : canPieceMove(nullptr), allMoveMethod(nullptr),m_exist(true) , m_board(&g_board) {
 
 }
 
 Piece::Piece(const Piece &piece) :m_type(piece.m_type), m_exist(piece.m_exist), value(piece.value), flexibilityFactor(piece.flexibilityFactor),
                                     m_board(nullptr), canPieceMove(piece.canPieceMove), allMoveMethod(piece.allMoveMethod), pos(piece.pos),
-                                    getMoveMethodCnt(piece.getMoveMethodCnt),posEvalutaion(piece.posEvalutaion), maxMoveMethod(piece.maxMoveMethod)
-{
+                                    getMoveMethodCnt(piece.getMoveMethodCnt),posEvalutaion(piece.posEvalutaion), maxMoveMethod(piece.maxMoveMethod) {
 
 }
 
@@ -87,13 +85,11 @@ Piece& Piece::operator=(const Piece& p) {
     return *this;
 }
 
-Piece::~Piece()
-{
+Piece::~Piece() {
     m_board = nullptr;
 }
 
-void Piece::Init(int id)
-{
+void Piece::Init(int id) {
     pos = {g_initialPos[id].row, g_initialPos[id].col};
 
     m_type = g_initialPos[id].type;
@@ -116,11 +112,10 @@ void Piece::Init(int id)
  * @return true: the piece can move from oldP to newP
  * @return false can't move
  */
-bool canGeneralMove(const pair<int, int> &oldP, const pair<int, int> &newP, PIECE_COLOR color, Board *board)
-{
+bool canGeneralMove(const pair<int, int> &oldP, const pair<int, int> &newP, PIECE_COLOR color, Board *board) {
     Q_UNUSED(board);
     int distance = abs(newP.first - oldP.first) + abs(newP.second - oldP.second);
-    if(distance != 1)
+    if(distance != 1) 
         return false;
 
     if(color == BLACK && !(newP.first >= 0 && newP.first <= 2 && newP.second >= 3 && newP.second <= 5 ) )
@@ -132,8 +127,7 @@ bool canGeneralMove(const pair<int, int> &oldP, const pair<int, int> &newP, PIEC
     return true;
 }
 
-bool canAdvisorMove(const pair<int, int> &oldP, const pair<int, int> &newP, PIECE_COLOR color, Board *board)
-{
+bool canAdvisorMove(const pair<int, int> &oldP, const pair<int, int> &newP, PIECE_COLOR color, Board *board) {
     Q_UNUSED(board);
 
     if(abs(newP.first - oldP.first) != 1 || abs(newP.second - oldP.second) != 1)
@@ -148,8 +142,7 @@ bool canAdvisorMove(const pair<int, int> &oldP, const pair<int, int> &newP, PIEC
     return true;
 }
 
-bool canElephantMove(const pair<int, int> &oldP, const pair<int, int> &newP, PIECE_COLOR color, Board *board)
-{
+bool canElephantMove(const pair<int, int> &oldP, const pair<int, int> &newP, PIECE_COLOR color, Board *board) {
     if(abs(newP.first - oldP.first) != 2 || abs(newP.second - oldP.second) != 2)
         return false;
 
@@ -168,8 +161,7 @@ bool canElephantMove(const pair<int, int> &oldP, const pair<int, int> &newP, PIE
     return true;
 }
 
-bool canHorseMove(const pair<int, int> &oldP, const pair<int, int> &newP, PIECE_COLOR color, Board *board)
-{
+bool canHorseMove(const pair<int, int> &oldP, const pair<int, int> &newP, PIECE_COLOR color, Board *board) {
     Q_UNUSED(color);
     int gapY = abs(newP.first - oldP.first);
     int gapX = abs(newP.second - oldP.second);
@@ -180,12 +172,10 @@ bool canHorseMove(const pair<int, int> &oldP, const pair<int, int> &newP, PIECE_
     int eyeY = 0;
     int eyeX = 0;
 
-    if(gapX == 2)
-    {
+    if(gapX == 2) {
         eyeY = oldP.first;
         eyeX = (oldP.second + newP.second )/ 2;
-    }
-    else{
+    } else {
         eyeX = oldP.second;
         eyeY = (oldP.first + newP.first) / 2;
     }
@@ -196,24 +186,18 @@ bool canHorseMove(const pair<int, int> &oldP, const pair<int, int> &newP, PIECE_
     return true;
 }
 
-bool canChariotMove(const pair<int, int> &oldP, const pair<int, int> &newP, PIECE_COLOR color, Board *board)
-{
+bool canChariotMove(const pair<int, int> &oldP, const pair<int, int> &newP, PIECE_COLOR color, Board *board) {
     Q_UNUSED(color);
-
     if(oldP.first != newP.first && oldP.second != newP.second)
         return false;
 
-    if(oldP.first == newP.first)
-    {
-        for(int c = oldP.second + 1; c < newP.second; c++)
-        {
+    if(oldP.first == newP.first) {
+        for(int c = oldP.second + 1; c < newP.second; c++) {
             if(board->getPieceType(oldP.first, c) != NO_PIECE)
                 return false;
         }
-    }
-    else{
-        for(int r = oldP.first + 1; r < newP.first; ++r)
-        {
+    } else{
+        for(int r = oldP.first + 1; r < newP.first; ++r) {
             if(board->getPieceType(r, oldP.second) != NO_PIECE)
                 return false;
         }
@@ -221,25 +205,20 @@ bool canChariotMove(const pair<int, int> &oldP, const pair<int, int> &newP, PIEC
     return true;
 }
 
-bool canCannoMove(const pair<int, int> &oldP, const pair<int, int> &newP, PIECE_COLOR color, Board *board)
-{
+bool canCannoMove(const pair<int, int> &oldP, const pair<int, int> &newP, PIECE_COLOR color, Board *board) {
     Q_UNUSED(color);
     if(oldP.first != newP.first && oldP.second != newP.second)
         return false;
 
     int pieceCnt = 0;
-    if(oldP.first == newP.first)
-    {
-        for(int c = std::min(oldP.second, newP.second) + 1; c < std::max(oldP.second,newP.second); c++)
-        {
+    if(oldP.first == newP.first) {
+        for(int c = std::min(oldP.second, newP.second) + 1; c < std::max(oldP.second,newP.second); c++) {
             if(board->getPieceType(oldP.first, c) != NO_PIECE)
                 ++pieceCnt;
         }
 
-    }
-    else{
-        for(int r = std::min(oldP.first, newP.first) + 1; r < std::max(oldP.first, newP.first); ++r)
-        {
+    } else {
+        for(int r = std::min(oldP.first, newP.first) + 1; r < std::max(oldP.first, newP.first); ++r) {
             if(board->getPieceType(r, oldP.second) != NO_PIECE)
                 ++pieceCnt;
         }
@@ -249,7 +228,6 @@ bool canCannoMove(const pair<int, int> &oldP, const pair<int, int> &newP, PIECE_
         return false;
 
     PIECE_TYPE target = board->getPieceType(newP.first, newP.second) ;
-
     if((target == NO_PIECE && pieceCnt != 0) || (target != NO_PIECE && pieceCnt != 1))
         return false;
 
@@ -257,20 +235,17 @@ bool canCannoMove(const pair<int, int> &oldP, const pair<int, int> &newP, PIECE_
 }
 
 
-bool canSoldierMove(const pair<int, int> &oldP, const pair<int, int> &newP, PIECE_COLOR color, Board *board)
-{
+bool canSoldierMove(const pair<int, int> &oldP, const pair<int, int> &newP, PIECE_COLOR color, Board *board) {
     Q_UNUSED(board);
     int distance = abs(oldP.first - newP.first) + abs(oldP.second - newP.second);
     if(distance != 1)
         return false;
 
-    if(color == BLACK && ( (newP.first < oldP.first) || (oldP.first <= 4 && newP.first - oldP.first != 1)))
-    {
+    if(color == BLACK && ( (newP.first < oldP.first) || (oldP.first <= 4 && newP.first - oldP.first != 1))) {
         return false;
     }
 
-    if(color == RED && ((newP.first > oldP.first) || (oldP.first >= 5 && newP.first - oldP.first != -1) )  )
-    {
+    if(color == RED && ((newP.first > oldP.first) || (oldP.first >= 5 && newP.first - oldP.first != -1) )  ) {
         return false;
     }
 
@@ -286,8 +261,7 @@ bool canSoldierMove(const pair<int, int> &oldP, const pair<int, int> &newP, PIEC
  * @param board 
  * @param chessMove store the move methods of the piece
  */
-void getGeneralMove(const pair<int, int> &oldP,  PIECE_COLOR color, Board *board, vector<ChessMove>& chessMove)
-{
+void getGeneralMove(const pair<int, int> &oldP,  PIECE_COLOR color, Board *board, vector<ChessMove>& chessMove) {
     auto left = pair<int, int>(oldP.first, oldP.second - 1);
     auto right = pair<int, int>(oldP.first, oldP.second + 1);
     auto top = pair<int, int>(oldP.first - 1, oldP.second);
@@ -322,8 +296,7 @@ void getGeneralMove(const pair<int, int> &oldP,  PIECE_COLOR color, Board *board
  * @param board 
  * @param chessMove store the move methods of the piece
  */
-void getAdvisorMove(const pair<int, int> &oldP,  PIECE_COLOR color, Board *board, vector<ChessMove>& chessMove)
-{
+void getAdvisorMove(const pair<int, int> &oldP,  PIECE_COLOR color, Board *board, vector<ChessMove>& chessMove) {
     auto leftTop = pair<int, int>(oldP.first - 1, oldP.second - 1);
     auto rightTop = pair<int, int>(oldP.first - 1, oldP.second + 1);
     auto leftDown = pair<int, int>(oldP.first + 1, oldP.second - 1);
@@ -359,8 +332,7 @@ void getAdvisorMove(const pair<int, int> &oldP,  PIECE_COLOR color, Board *board
  * @param board 
  * @param chessMove store the move methods of the piece
  */
-void getElephantMove(const pair<int, int> &oldP,  PIECE_COLOR color, Board *board, vector<ChessMove>& chessMove)
-{
+void getElephantMove(const pair<int, int> &oldP,  PIECE_COLOR color, Board *board, vector<ChessMove>& chessMove) {
     auto leftTop = pair<int, int>(oldP.first - 2, oldP.second - 2);
     auto rightTop = pair<int, int>(oldP.first - 2, oldP.second + 2);
     auto leftDown = pair<int, int>(oldP.first + 2, oldP.second - 2);
@@ -458,48 +430,51 @@ void getHorseMove(const pair<int, int> &oldP,  PIECE_COLOR color, Board *board, 
  * @param board 
  * @param chessMove store the move methods of the piece
  */
-void getChariotMove(const pair<int, int> &oldP,  PIECE_COLOR color, Board *board, vector<ChessMove>& chessMove)
-{
+void getChariotMove(const pair<int, int> &oldP,  PIECE_COLOR color, Board *board, vector<ChessMove>& chessMove) {
     //top
     for(int r = oldP.first - 1; r >= 0; --r) {
-        if(board->getPieceType(r, oldP.second) == NO_PIECE)
+        if(board->getPieceType(r, oldP.second) == NO_PIECE) {
             chessMove.push_back(ChessMove(oldP, pair<int, int>{r, oldP.second}));
-        else {
-            if(board->getPieceColor(r, oldP.second) != color)
+        } else {
+            if(board->getPieceColor(r, oldP.second) != color) {
                 chessMove.push_back(ChessMove(oldP, pair<int, int>{r, oldP.second}));
+            }
             break;
         }
     }
 
     //down
     for(int r = oldP.first + 1; r <= 9; ++r) {
-        if(board->getPieceType(r, oldP.second) == NO_PIECE)
+        if(board->getPieceType(r, oldP.second) == NO_PIECE) {
             chessMove.push_back(ChessMove(oldP, pair<int, int>{r, oldP.second}));
-        else {
-            if(board->getPieceColor(r, oldP.second) != color)
+        } else {
+            if(board->getPieceColor(r, oldP.second) != color) {
                 chessMove.push_back(ChessMove(oldP, pair<int, int>{r, oldP.second}));
+            }
             break;
         }
     }
 
     //left
     for(int c = oldP.second - 1; c >= 0; --c) {
-        if(board->getPieceType(oldP.first, c) == NO_PIECE)
+        if(board->getPieceType(oldP.first, c) == NO_PIECE) {
             chessMove.push_back(ChessMove(oldP, pair<int, int>{oldP.first, c}));
-        else {
-            if(board->getPieceColor(oldP.first, c) != color)
+        } else {
+            if(board->getPieceColor(oldP.first, c) != color) {
                 chessMove.push_back(ChessMove(oldP, pair<int,int>{oldP.first, c}));
+            }
             break;
         }
     }
 
     //right
     for(int c = oldP.second + 1; c <= 8; ++c) {
-        if(board->getPieceType(oldP.first, c) == NO_PIECE)
+        if(board->getPieceType(oldP.first, c) == NO_PIECE) {
             chessMove.push_back(ChessMove(oldP, pair<int, int>{oldP.first, c}));
-        else {
-            if(board->getPieceColor(oldP.first, c) != color)
+        } else {
+            if(board->getPieceColor(oldP.first, c) != color) {
                 chessMove.push_back(ChessMove(oldP, pair<int,int>{oldP.first, c}));
+            }
             break;
         }
     }
@@ -513,19 +488,18 @@ void getChariotMove(const pair<int, int> &oldP,  PIECE_COLOR color, Board *board
  * @param board 
  * @param chessMove store the move methods of the piece
  */
-void getCannoMove(const pair<int, int> &oldP,  PIECE_COLOR color, Board *board, vector<ChessMove>& chessMove)
-{
+void getCannoMove(const pair<int, int> &oldP,  PIECE_COLOR color, Board *board, vector<ChessMove>& chessMove) {
     //top
     bool MidPiece = false;
     for(int r = oldP.first - 1; r >= 0; --r) {
-        if(!MidPiece && board->getPieceType(r, oldP.second) == NO_PIECE)
+        if(!MidPiece && board->getPieceType(r, oldP.second) == NO_PIECE) {
             chessMove.push_back(ChessMove(oldP, pair<int, int>{r, oldP.second}));
-        else {
-            if(!MidPiece)
+        } else {
+            if(!MidPiece) {
                 MidPiece = true;
-            else if(board->getPieceType(r, oldP.second) == NO_PIECE)
+            } else if(board->getPieceType(r, oldP.second) == NO_PIECE) {
                 continue;
-            else if(board->getPieceColor(r, oldP.second) != color) {
+            } else if(board->getPieceColor(r, oldP.second) != color) {
                 chessMove.push_back(ChessMove(oldP, pair<int, int>{r, oldP.second}));
                 break;
             }
@@ -536,14 +510,14 @@ void getCannoMove(const pair<int, int> &oldP,  PIECE_COLOR color, Board *board, 
     //down
     MidPiece = false;
     for(int r = oldP.first + 1; r <= 9; ++r) {
-        if(!MidPiece && board->getPieceType(r, oldP.second) == NO_PIECE)
+        if(!MidPiece && board->getPieceType(r, oldP.second) == NO_PIECE) {
             chessMove.push_back(ChessMove(oldP, pair<int, int>{r, oldP.second}));
-        else {
-            if(!MidPiece)
+        } else {
+            if(!MidPiece) {
                 MidPiece = true;
-            else if(board->getPieceType(r, oldP.second) == NO_PIECE)
+            } else if(board->getPieceType(r, oldP.second) == NO_PIECE) {
                 continue;
-            else if(board->getPieceColor(r, oldP.second) != color) {
+            } else if(board->getPieceColor(r, oldP.second) != color) {
                 chessMove.push_back(ChessMove(oldP, pair<int, int>{r, oldP.second}));
                 break;
             }
@@ -554,14 +528,14 @@ void getCannoMove(const pair<int, int> &oldP,  PIECE_COLOR color, Board *board, 
     //left
     MidPiece = false;
     for(int c = oldP.second - 1; c >= 0; --c) {
-        if(!MidPiece && board->getPieceType(oldP.first, c) == NO_PIECE)
+        if(!MidPiece && board->getPieceType(oldP.first, c) == NO_PIECE) {
             chessMove.push_back(ChessMove(oldP, pair<int, int>{oldP.first, c}));
-        else {
-            if(!MidPiece)
+        } else {
+            if(!MidPiece) {
                 MidPiece = true;
-            else if(board->getPieceType(oldP.first, c) == NO_PIECE)
+            } else if(board->getPieceType(oldP.first, c) == NO_PIECE) {
                 continue;
-            else if(board->getPieceColor(oldP.first, c) != color) {
+            } else if(board->getPieceColor(oldP.first, c) != color) {
                 chessMove.push_back(ChessMove(oldP, pair<int, int>{oldP.first, c}));
                 break;
             }
@@ -572,14 +546,14 @@ void getCannoMove(const pair<int, int> &oldP,  PIECE_COLOR color, Board *board, 
     //right
     MidPiece = false;
     for(int c = oldP.second + 1; c <= 8; ++c) {
-        if(!MidPiece && board->getPieceType(oldP.first, c) == NO_PIECE)
+        if(!MidPiece && board->getPieceType(oldP.first, c) == NO_PIECE) {
             chessMove.push_back(ChessMove(oldP, pair<int, int>{oldP.first, c}));
-        else {
-            if(!MidPiece)
+        } else {
+            if(!MidPiece) {
                 MidPiece = true;
-            else if(board->getPieceType(oldP.first, c) == NO_PIECE)
+            } else if(board->getPieceType(oldP.first, c) == NO_PIECE) {
                 continue;
-            else if(board->getPieceColor(oldP.first, c) != color) {
+            } else if(board->getPieceColor(oldP.first, c) != color) {
                 chessMove.push_back(ChessMove(oldP, pair<int, int>{oldP.first, c}));
                 break;
             }
@@ -779,14 +753,13 @@ int getHorseMoveMethodsCnt(const pair<int,int> &oldP, PIECE_COLOR color, Board *
 }
 
 
-int getChariotMoveMethodsCnt(const pair<int,int> &oldP, PIECE_COLOR color, Board *board)
-{
+int getChariotMoveMethodsCnt(const pair<int,int> &oldP, PIECE_COLOR color, Board *board) {
     int res = 0;
     //top
     for(int r = oldP.first - 1; r >= 0; --r) {
-        if(board->getPieceType(r, oldP.second) == NO_PIECE)
+        if(board->getPieceType(r, oldP.second) == NO_PIECE) {
             ++res;
-        else {
+        } else {
             if(board->getPieceColor(r, oldP.second) != color)
                 ++res;
             break;
@@ -795,9 +768,9 @@ int getChariotMoveMethodsCnt(const pair<int,int> &oldP, PIECE_COLOR color, Board
 
     //down
     for(int r = oldP.first + 1; r <= 9; ++r) {
-        if(board->getPieceType(r, oldP.second) == NO_PIECE)
+        if(board->getPieceType(r, oldP.second) == NO_PIECE) {
             ++res;
-        else {
+        } else {
             if(board->getPieceColor(r, oldP.second) != color)
                 ++res;
             break;
@@ -806,9 +779,9 @@ int getChariotMoveMethodsCnt(const pair<int,int> &oldP, PIECE_COLOR color, Board
 
     //left
     for(int c = oldP.second - 1; c >= 0; --c) {
-        if(board->getPieceType(oldP.first, c) == NO_PIECE)
+        if(board->getPieceType(oldP.first, c) == NO_PIECE) {
             ++res;
-        else {
+        } else {
             if(board->getPieceColor(oldP.first, c) != color)
                 ++res;
             break;
@@ -817,9 +790,9 @@ int getChariotMoveMethodsCnt(const pair<int,int> &oldP, PIECE_COLOR color, Board
 
     //right
     for(int c = oldP.second + 1; c <= 8; ++c) {
-        if(board->getPieceType(oldP.first, c) == NO_PIECE)
+        if(board->getPieceType(oldP.first, c) == NO_PIECE) {
             ++res;
-        else {
+        } else {
             if(board->getPieceColor(oldP.first, c) != color)
                 ++res;
             break;
@@ -835,14 +808,14 @@ int getCannoMoveMethodsCnt(const pair<int,int> &oldP, PIECE_COLOR color, Board *
     //top
     bool MidPiece = false;
     for(int r = oldP.first - 1; r >= 0; --r) {
-        if(!MidPiece && board->getPieceType(r, oldP.second) == NO_PIECE)
+        if(!MidPiece && board->getPieceType(r, oldP.second) == NO_PIECE) {
             ++res;
-        else {
-            if(!MidPiece)
+        } else {
+            if(!MidPiece) {
                 MidPiece = true;
-            else if(board->getPieceType(r, oldP.second) == NO_PIECE)
+            } else if(board->getPieceType(r, oldP.second) == NO_PIECE) {
                 continue;
-            else if(board->getPieceColor(r, oldP.second) != color) {
+            } else if(board->getPieceColor(r, oldP.second) != color) {
                 ++res;
                 break;
             }
@@ -853,14 +826,14 @@ int getCannoMoveMethodsCnt(const pair<int,int> &oldP, PIECE_COLOR color, Board *
     //down
     MidPiece = false;
     for(int r = oldP.first + 1; r <= 9; ++r) {
-        if(!MidPiece && board->getPieceType(r, oldP.second) == NO_PIECE)
+        if(!MidPiece && board->getPieceType(r, oldP.second) == NO_PIECE) {
             ++res;
-        else {
-            if(!MidPiece)
+        } else {
+            if(!MidPiece) {
                 MidPiece = true;
-            else if(board->getPieceType(r, oldP.second) == NO_PIECE)
+            } else if(board->getPieceType(r, oldP.second) == NO_PIECE) {
                 continue;
-            else if(board->getPieceColor(r, oldP.second) != color) {
+            } else if(board->getPieceColor(r, oldP.second) != color) {
                 ++res;
                 break;
             }
@@ -871,14 +844,14 @@ int getCannoMoveMethodsCnt(const pair<int,int> &oldP, PIECE_COLOR color, Board *
     //left
     MidPiece = false;
     for(int c = oldP.second - 1; c >= 0; --c) {
-        if(!MidPiece && board->getPieceType(oldP.first, c) == NO_PIECE)
+        if(!MidPiece && board->getPieceType(oldP.first, c) == NO_PIECE) {
             ++res;
-        else {
-            if(!MidPiece)
+        } else {
+            if(!MidPiece) {
                 MidPiece = true;
-            else if(board->getPieceType(oldP.first, c) == NO_PIECE)
+            } else if(board->getPieceType(oldP.first, c) == NO_PIECE) {
                 continue;
-            else if(board->getPieceColor(oldP.first, c) != color) {
+            } else if(board->getPieceColor(oldP.first, c) != color) {
                 ++res;
                 break;
             }
@@ -889,14 +862,15 @@ int getCannoMoveMethodsCnt(const pair<int,int> &oldP, PIECE_COLOR color, Board *
     //right
     MidPiece = false;
     for(int c = oldP.second + 1; c <= 8; ++c) {
-        if(!MidPiece && board->getPieceType(oldP.first, c) == NO_PIECE)
+        if(!MidPiece && board->getPieceType(oldP.first, c) == NO_PIECE) {
             ++res;
+        }
         else {
-            if(!MidPiece)
+            if(!MidPiece) {
                 MidPiece = true;
-            else if(board->getPieceType(oldP.first, c) == NO_PIECE)
+            } else if(board->getPieceType(oldP.first, c) == NO_PIECE) {
                 continue;
-            else if(board->getPieceColor(oldP.first, c) != color) {
+            } else if(board->getPieceColor(oldP.first, c) != color) {
                 ++res;
                 break;
             }
@@ -912,29 +886,25 @@ int getSoldierMoveMethodsCnt(const pair<int,int> &oldP, PIECE_COLOR color, Board
     if ((color == BLACK && oldP.first > 4) || (color == RED && oldP.first < 5)) {
         //left
         auto left = pair<int, int>{oldP.first, oldP.second - 1};
-        if(isEmptyOrEnemy(board, color, left)) {
+        if(isEmptyOrEnemy(board, color, left))
             ++res;
-        }
         //right
         auto right = pair<int, int>{oldP.first, oldP.second + 1};
-        if((isEmptyOrEnemy(board, color, right))) {
+        if((isEmptyOrEnemy(board, color, right)))
             ++res;
-        }
     }
 
     if (color == BLACK) {
         auto down = pair<int, int>{oldP.first + 1, oldP.second};
-        if(isEmptyOrEnemy(board, color, down)) {
+        if(isEmptyOrEnemy(board, color, down)) 
             ++res;
-        }
         return res;
     }
 
     if (color == RED) {
         auto top = pair<int, int>{oldP.first - 1, oldP.second};
-        if(isEmptyOrEnemy(board, color, top)) {
+        if(isEmptyOrEnemy(board, color, top)) 
             ++res;
-        }
         return res;
     }
 
@@ -953,9 +923,7 @@ int getSoldierMoveMethodsCnt(const pair<int,int> &oldP, PIECE_COLOR color, Board
  * @return false 
  */
 bool isOnBoard(pair<int, int> &p) {
-    if (p.first < 0 || p.first > 9 || p.second < 0 || p.second > 8)
-        return false;
-    return true;
+    return p.first < 0 || p.first > 9 || p.second < 0 || p.second > 8? false : true;
 }
 
 /**

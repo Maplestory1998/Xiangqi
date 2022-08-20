@@ -19,38 +19,53 @@ enum GAME_STATE{
 };
 
 
-class GameController
-{
+class GameController {
 public:
     GameController(GAME_MODE mode);
     ~GameController();
 
-    Board* getBoard() { return m_board;}
+    inline Board* getBoard() { 
+        return m_board;
+    }
+
+    inline void setGameState(GAME_STATE state) {
+        m_gameState = state;
+    }
+
+    inline GAME_STATE getGameState() {
+        return m_gameState;
+    }
+
+    inline pair<int, int> getChosePos() { 
+        return m_chosePos;
+    }
+
+    inline pair<int, int> getCurPos() { 
+        return m_curPos;
+    }
+
+    inline void setChosePos(int r, int c) {
+        m_chosePos = {r, c};
+    }
+
+    inline void setCurPos(int r, int c) { 
+        m_curPos = {r, c};
+    }
+
     void setBoard(Board *_board);
-    void setGameState(GAME_STATE state){m_gameState = state;}
-    GAME_STATE getGameState(){return m_gameState;}
 
     GAME_STATE controller(int _row, int _col, GAME_MODE gameMode);
-
-    pair<int, int> getChosePos() { return m_chosePos;}
-    pair<int, int> getCurPos() { return m_curPos;}
-
-    void setChosePos(int r, int c) {m_chosePos = {r, c};}
-    void setCurPos(int r, int c) { m_curPos = {r, c};}
 
     void runAi(PIECE_COLOR _aiColor);
 
 private:
-
     Board *m_board;
-    //PVP or PVE
     GAME_STATE m_gameState;
 
     pair<int, int> m_chosePos;
     pair<int, int> m_curPos;
-    //轮到谁走棋了
-    PIECE_COLOR m_currentPlayer;
 
+    PIECE_COLOR m_currentPlayer;
 public:
     Ai *ai;
 };
