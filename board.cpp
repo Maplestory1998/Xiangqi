@@ -9,8 +9,7 @@ Board g_board;
  * Should only be called once in GameController
  * 
  */
-Board::Board()
-{
+Board::Board() {
     initBoard();
 }
 

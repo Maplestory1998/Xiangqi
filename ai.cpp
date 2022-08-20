@@ -1,7 +1,7 @@
 #include "ai.h"
 #include <QDebug>
 
-Ai::Ai(Board *_board, PIECE_COLOR _color): m_board(_board), aiColor(_color), tree(nullptr){
+Ai::Ai(Board *_board, PIECE_COLOR _color): m_board(_board), aiColor(_color), tree(nullptr) {
 
 }
 
@@ -10,6 +10,10 @@ Ai::~Ai() {
     delete tree;
 }
 
+/**
+ * @brief Run the ai;
+ * @param _aiColor 
+ */
 void Ai::run(PIECE_COLOR _aiColor) {
     tree = new MCTSTree(m_board, _aiColor);
 
