@@ -123,6 +123,12 @@ void Widget::paintEvent(QPaintEvent *event) {
     //Displaying Auxiliary Information
     if(m_gameController->getGameState() == WAIT_PLAYER_MOVE) {
         drawBoard3(pp, pen, m_gameController->getChosePos().first, m_gameController->getChosePos().second);
+        // drawBoard3(pp, pen, m_gameController->getCurPos().first, m_gameController->getCurPos().second);
+    }
+
+    if(m_gameController->getGameState() == WAIT_PLAYER_CHOOSE_PIECE) {
+        drawBoard3(pp, pen, m_gameController->getChosePos().first, m_gameController->getChosePos().second);
+        drawBoard3(pp, pen, m_gameController->getCurPos().first, m_gameController->getCurPos().second);
     }
 
     painter.drawPixmap(m_gap / 2, m_gap / 2, pix);

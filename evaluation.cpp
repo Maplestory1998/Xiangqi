@@ -114,7 +114,6 @@ PIECE_COLOR evalutationFunction(Board *board) {
     for (int i = 0; i < 32; ++i ){
         Piece p = board->getPiece(i);
         if (p.isExist()) {
-            int pieceTotalValue = getPiecePosValue(p);
             int piecePosValue = getPiecePosValue(p);
             int pieceFightValue = p.getValue();
             int pieceFlexibilityValue = p.getFlexibilityFactor() * p.getMoveMethodCnt(p.getPos(), p.getColor(), board)
