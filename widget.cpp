@@ -49,6 +49,9 @@ void Widget::paintEvent(QPaintEvent *event) {
     int windowHeight = this->geometry().height();
     float scaleY = static_cast<float>(windowHeight) / static_cast<float>(WINDOW_HEIGHT_DEFAULT);
 
+    ui->red->setGeometry(windowWidth - 600, windowHeight - 200, 500, 70);
+    ui->black->setGeometry(windowWidth - 600, 200, 500, 70);
+
     //set the size of the pixmap
     m_gap = 100;
     int size = windowHeight - 100;
@@ -118,6 +121,18 @@ void Widget::paintEvent(QPaintEvent *event) {
         }
     }
 
+    PIECE_COLOR currentColor = m_gameController->m_currentPlayer;
+    if (currentColor == RED) {
+        ui->red->setStyleSheet("color:red;");
+        ui->red->setText("Red side round");
+        ui->red->setHidden(false);
+        ui->black->setHidden(true);
+    } else {
+        ui->black->setStyleSheet("color:black;");
+        ui->black->setText("Black side round");
+        ui->black->setHidden(false);
+        ui->red->setHidden(true);
+    }
 
     //等待玩家移动
     //Displaying Auxiliary Information

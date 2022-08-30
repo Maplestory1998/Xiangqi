@@ -65,9 +65,9 @@ private:
     pair<int, int> m_chosePos;
     pair<int, int> m_curPos;
 
-    PIECE_COLOR m_currentPlayer;
 public:
     Ai *ai;
+    PIECE_COLOR m_currentPlayer;
 };
 
 #endif // GAMECONTROLLER_H
