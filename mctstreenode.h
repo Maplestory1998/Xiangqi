@@ -17,28 +17,28 @@ public:
     MCTSTreeNode(Board *_board, PIECE_COLOR color, ChessMove *move, MCTSTreeNode *parent = nullptr);
     ~MCTSTreeNode();
 
+    void isEnd();
+
 public:
-    //是红色还是黑子走棋
+    //The player who moves in the turn
     PIECE_COLOR currentColor;
     PIECE_COLOR winner;
-    //是否是终点
+    //Is it a leaf node?
     bool isTerminal;
-    //是否被完全扩展
+    //Whether it is fully extended
     bool isFullyExpanded;
-    //父节点
+    //Parent node
     MCTSTreeNode *parent;
-    //被访问的次数
+    //The number of times the node was visited
     int numVisited;
-    //Ai获胜的次数
+    //The number of times Ai wins
     int numAiWin;
-    //当前棋局
+    //current game situation
     Board board;
-    //子节点
+    //children nodes
     vector<MCTSTreeNode*> children;
-
+    //Number of child nodes that have been visited
     int visitedChildrenCnt;
-
-    void isEnd();
 };
 
 
