@@ -5,7 +5,10 @@
 #include "board.h"
 #include <mctstreenode.h>
 #include "mctstree.h"
+#include "gamecontroller.h"
 using namespace std;
+
+class GameController;
 
 /**
  * @brief AI module
@@ -18,7 +21,7 @@ public:
     Ai& operator=(const Ai &ai) = delete;
     ~Ai();
 
-    void run(PIECE_COLOR _aiColor);
+    void run(PIECE_COLOR _aiColor, GameController *gameController);
     
 public:
     Board *m_board;

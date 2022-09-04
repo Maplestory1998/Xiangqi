@@ -1,7 +1,8 @@
 #include "gamecontroller.h"
 #include "QtDebug"
 
-GameController::GameController(GAME_MODE mode) : m_board (&g_board),  m_gameState(WAIT_PLAYER_CHOOSE_PIECE), m_currentPlayer(RED), ai(nullptr) {
+GameController::GameController(GAME_MODE mode) : m_board (&g_board),  m_gameState(WAIT_PLAYER_CHOOSE_PIECE), m_currentPlayer(RED), ai(nullptr)
+                ,isOpenCurPos(false), isOpenChosePos(false) {
     if (mode == PVE) {
         ai = new Ai(m_board, BLACK);
     }
@@ -15,7 +16,7 @@ GameController::~GameController() {
 }
 
 void GameController::runAi(PIECE_COLOR _aiColor) {
-    ai->run(_aiColor);
+    ai->run(_aiColor, this);
     m_gameState = WAIT_PLAYER_CHOOSE_PIECE;
     m_currentPlayer = m_currentPlayer == RED? BLACK : RED;
 }
@@ -38,10 +39,12 @@ GAME_STATE GameController::controller(int _row, int _col, GAME_MODE gameMode) {
 
         m_gameState = WAIT_PLAYER_MOVE;
         setChosePos(_row, _col);
+        isOpenChosePos = true;
         return m_gameState;
     } else if(m_gameState ==  WAIT_PLAYER_MOVE) {
         if (_row < 0 || _row > 9 || _col < 0 || _col > 8) {
             m_gameState = WAIT_PLAYER_CHOOSE_PIECE;
+            isOpenChosePos = false;
             return m_gameState;
         }
 
@@ -49,9 +52,14 @@ GAME_STATE GameController::controller(int _row, int _col, GAME_MODE gameMode) {
         bool res = getBoard()->canMove(getChosePos(), getCurPos());
 
         if(res == true) {
+            isOpenCurPos = true;
             m_currentPlayer = m_currentPlayer == RED? BLACK : RED;
             getBoard()->movePiece(getChosePos(), getCurPos());
             m_gameState = gameMode == PVP ?WAIT_PLAYER_CHOOSE_PIECE: WAIT_AI_MOVE;
+        } else {
+            isOpenChosePos = false;
+            isOpenCurPos = false;
+            m_gameState = WAIT_PLAYER_CHOOSE_PIECE;
         }
     }
     //判断游戏是否结束

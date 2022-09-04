@@ -31,6 +31,7 @@ public:
 
     void updateState(MCTSTreeNode *node);
 
+    MCTSTreeNode* mostEmplored(MCTSTreeNode* node);
 public:
     MCTSTreeNode *root;
 

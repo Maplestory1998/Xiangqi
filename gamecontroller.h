@@ -4,6 +4,7 @@
 #include "board.h"
 #include "ai.h"
 
+class Ai;
 enum GAME_MODE{
     PVP,
     PVE,
@@ -66,8 +67,11 @@ private:
     pair<int, int> m_curPos;
 
 public:
-    Ai *ai;
+    Ai* ai;
     PIECE_COLOR m_currentPlayer;
+
+    bool isOpenChosePos;
+    bool isOpenCurPos;
 };
 
 #endif // GAMECONTROLLER_H

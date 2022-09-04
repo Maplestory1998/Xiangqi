@@ -17,16 +17,16 @@ MCTSTree::~MCTSTree() {
 
 
 MCTSTreeNode* MCTSTree::mctsSearch() {
-    for (int i = 0;i < 5000000; ++i) {
+    time_t start = time(nullptr);
+    time_t end = time(nullptr);
+    while(difftime(end, start) < 2.0) {
         MCTSTreeNode* leaf = traverse(root);
-        if (leaf == nullptr) {
-            continue;
-        }
         int reward = rollout(leaf);
         backpropogate(leaf, reward);
+        end = time(nullptr);
     }
 
-    return bestChild(root);
+    return mostEmplored(root);
 }
 
 
@@ -74,14 +74,11 @@ MCTSTreeNode* MCTSTree::traverse(MCTSTreeNode* node) {
     }
 
     MCTSTreeNode *res = pickUnvisited(node);
-    if (res == nullptr) {
-        backpropogate(node, 1);
-    }
     return res;
 }
 
 MCTSTreeNode* MCTSTree::pickUnvisited(MCTSTreeNode *node) {
-    if (node->numVisited == 0) {
+    if (node->visitedChildrenCnt == 0) {
         generateChildren(node);
         MCTSTreeNode *res = randomChoice(node->children);
         return res;
@@ -125,6 +122,16 @@ MCTSTreeNode* MCTSTree::bestChild(MCTSTreeNode *node) {
     return randomChoice(bestNodes);
 }
 
+
+MCTSTreeNode* MCTSTree::mostEmplored(MCTSTreeNode* node) {
+    MCTSTreeNode *res = node->children[0];
+    for (auto child : node->children) {
+        if (child->numVisited > res->numVisited) {
+            res = child;
+        }
+    }
+    return res;
+}
 
 void MCTSTree::backpropogate(MCTSTreeNode* node, int reward) {
     for (auto child : node->children) {

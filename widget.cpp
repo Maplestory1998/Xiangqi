@@ -19,11 +19,6 @@ Widget::Widget(QWidget *parent, GAME_MODE mode)
     ui->setupUi(this);
     resize(WINDOW_WIDTH_DEFAULT , WINDOW_HEIGHT_DEFAULT);
     setMinimumSize(WINDOW_WIDTH_DEFAULT , WINDOW_HEIGHT_DEFAULT);
-    if(game_mode == PVE) {
-        qDebug()<<"PVE";
-    }
-    if(game_mode == PVP)
-        qDebug()<<"PVP";
 
     loadImages();
 }
@@ -48,6 +43,14 @@ void Widget::paintEvent(QPaintEvent *event) {
     int windowWidth = this->geometry().width();
     int windowHeight = this->geometry().height();
     float scaleY = static_cast<float>(windowHeight) / static_cast<float>(WINDOW_HEIGHT_DEFAULT);
+
+    ui->mode->setGeometry(windowWidth - 600, windowHeight / 2, 500, 70);
+    ui->mode->setStyleSheet("color:red;");
+    if (game_mode == PVE) {
+        ui->mode->setText("PVE");
+    } else {
+        ui->mode->setText("PVP");
+    }
 
     ui->red->setGeometry(windowWidth - 600, windowHeight - 200, 500, 70);
     ui->black->setGeometry(windowWidth - 600, 200, 500, 70);
@@ -136,13 +139,11 @@ void Widget::paintEvent(QPaintEvent *event) {
 
     //等待玩家移动
     //Displaying Auxiliary Information
-    if(m_gameController->getGameState() == WAIT_PLAYER_MOVE) {
+    if (m_gameController->isOpenChosePos) {
         drawBoard3(pp, pen, m_gameController->getChosePos().first, m_gameController->getChosePos().second);
-        // drawBoard3(pp, pen, m_gameController->getCurPos().first, m_gameController->getCurPos().second);
     }
 
-    if(m_gameController->getGameState() == WAIT_PLAYER_CHOOSE_PIECE) {
-        drawBoard3(pp, pen, m_gameController->getChosePos().first, m_gameController->getChosePos().second);
+    if (m_gameController->isOpenCurPos) {
         drawBoard3(pp, pen, m_gameController->getCurPos().first, m_gameController->getCurPos().second);
     }
 
@@ -165,7 +166,6 @@ void Widget::mousePressEvent(QMouseEvent *event) {
     int cIdx = static_cast<float>(posX - m_topLeft.x()) / static_cast<float>(m_step) + 0.5f;
     int rIdx = static_cast<float>(posY - m_topLeft.y()) / static_cast<float>(m_step) + 0.5f;
 
-    PIECE_TYPE type = m_gameController->getBoard()->getPieceType(rIdx, cIdx);
     GAME_STATE currentState = m_gameController->controller(rIdx, cIdx, game_mode);
 
     update();
