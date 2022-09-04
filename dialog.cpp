@@ -1,5 +1,6 @@
 #include "dialog.h"
 #include "ui_dialog.h"
+#include <QDebug>
 
 Dialog::Dialog(QWidget *parent) :
     QDialog(parent), isPVE(true),
@@ -15,16 +16,19 @@ Dialog::~Dialog()
 
 void Dialog::on_pvp_clicked()
 {
-    accept();
+    this->hide();
+    emit showPVPWindow();
 }
 
 void Dialog::on_exit_clicked()
 {
-    qApp->quit();
+    this->hide();
+    emit quit();
 }
 
 
 void Dialog::on_pve_clicked()
 {
-    reject();
+    this->hide();
+    emit showPVEWindow();
 }

@@ -21,8 +21,13 @@ private slots:
 
     void on_exit_clicked();
 
-
     void on_pve_clicked();
+
+signals:
+    void showPVPWindow();
+    void showPVEWindow();
+    void quit();
+
 
 private:
     Ui::Dialog *ui;

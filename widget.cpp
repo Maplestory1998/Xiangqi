@@ -23,6 +23,10 @@ Widget::Widget(QWidget *parent, GAME_MODE mode)
     loadImages();
 }
 
+void Widget::showWindow() {
+    this->show();
+}
+
 void Widget::loadImages() {
     for(int i = 0; i < 14; ++i) {
         m_pieceImages[i].load(g_imagesSources[i]);

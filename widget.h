@@ -52,6 +52,8 @@ private:
     int m_gap;
     QPoint m_topLeft;
     int m_step;
+private slots:
+    void showWindow();
 
 };
 #endif // WIDGET_H

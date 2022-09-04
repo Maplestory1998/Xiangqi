@@ -1,23 +1,18 @@
 #include "widget.h"
 #include "dialog.h"
 #include <QApplication>
+#include <QDebug>
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
     Dialog  dlg;
-    if(dlg.exec() == QDialog::Accepted)
-    {
-        Widget w(nullptr, PVP);
-        w.show();
-        return a.exec();
-    }
-    else if(dlg.exec() == QDialog::Rejected){
-        Widget w(nullptr, PVE);
-        w.show();
-        return a.exec();
-    }
-
-    return 0;
+    Widget pvp(nullptr, PVP);
+    Widget pve(nullptr, PVE);
+    dlg.show();
+    QObject::connect(&dlg, SIGNAL(showPVPWindow()), &pvp, SLOT(showWindow()));
+    QObject::connect(&dlg, SIGNAL(showPVEWindow()), &pve, SLOT(showWindow()));
+    QObject::connect(&dlg, SIGNAL(quit()), &a, SLOT(quit()));
+    return a.exec();
 }
